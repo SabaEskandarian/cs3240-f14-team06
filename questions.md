@@ -3,7 +3,7 @@
 
 ###paragraph 1
 
-No Questions
+Any restrictions on the type or format of the "information"/documents that will be stored on the server?
 
 
 ###paragraph 2
