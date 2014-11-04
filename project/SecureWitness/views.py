@@ -45,17 +45,26 @@ def createBulletin(request, userId):
     #return showUserHome(userId, request)
     return HttpResponseRedirect('/'+userId+'/')
 
-@require_http_methods(["DELETE"])
+#@require_http_methods(["DELETE"]) this was causing problems
 def deleteBulletin(request, userId, bulletinId):
-    return
+    bulletin = models.Bulletin.objects.get(pk=bulletinId)
+    bulletin.delete()
+    return HttpResponseRedirect('/'+userId+'/')
 
 @require_http_methods(["POST"])
 def renameBulletin(request, userId, bulletinId):
-    return
+    bulletin = models.Bulletin.objects.get(pk=bulletinId)
+    bulletin.name = request.POST['name']
+    bulletin.save()
+    return HttpResponseRedirect('/'+userId+'/')
 
 @require_http_methods(["POST"])
 def copyBulletin(request, userId, bulletinId):
-    return
+    bulletin = models.Bulletin.objects.get(pk=bulletinId)
+    bulletin.pk=None
+    bulletin.name = request.POST['name']
+    bulletin.save()
+    return HttpResponseRedirect('/'+userId+'/')
 
 @require_http_methods(["GET"])
 def getBulletins(request, userId):
@@ -116,5 +125,3 @@ class BulletinForm(ModelForm):
     class Meta:
         model = models.Bulletin
         fields = ['name', 'date', 'location', 'description', 'public']
-
-

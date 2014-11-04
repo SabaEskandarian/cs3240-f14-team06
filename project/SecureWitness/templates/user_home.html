@@ -16,6 +16,7 @@
 {% for bulletin in bulletins %}
 <p>
     <h3>{{ bulletin.name }}</h3>
+    <h4>Information</h4>
     <ul>
         <li>date: {{ bulletin.date }}</li>
         <li>location: {{ bulletin.location }}</li>
@@ -23,6 +24,31 @@
         <li>public: {{ bulletin.public }}</li>
     </ul>
 </p>
+    <p>
+        <h4>Options</h4>
+        <ul>
+            <li>Rename Bulletin:
+                <form action="/{{ userId }}/renameBulletin/{{ bulletin.id }}" method="post">
+                    {% csrf_token %}
+                    <input id="id_name" maxlength="100" name="name" type="text" />
+                    <input type="submit" value="rename">
+                </form>
+            </li>
+        <li>Copy Bulletin:
+            <form action="/{{ userId }}/copyBulletin/{{ bulletin.id }}" method="post">
+                {% csrf_token %}
+                    <input id="id_name" maxlength="100" name="name" type="text" />
+                <input type = "submit" value="copy">
+            </form>
+        </li>
+        <li>
+            <form action="/{{ userId }}/deleteBulletin/{{ bulletin.id }}" method="delete">
+                {% csrf_token %}
+                <input type = "submit" value="delete bulletin">
+            </form>
+        </li>
+        </ul>
+    </p>
 <hr />
 {% endfor %}
 </body>
