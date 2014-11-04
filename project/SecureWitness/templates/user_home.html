@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>SecureWitness</title>
+</head>
+<body>
+<h1>User Home</h1>
+<h2>Create a Bulletin</h2>
+<form action="/{{ userId }}/createBulletin/" method="post">
+{% csrf_token %}
+{{ bulletinForm }}
+<input type="submit" value="Submit">
+</form>
+<h2>My Bulletins</h2>
+{% for bulletin in bulletins %}
+<p>
+    <h3>{{ bulletin.name }}</h3>
+    <ul>
+        <li>date: {{ bulletin.date }}</li>
+        <li>location: {{ bulletin.location }}</li>
+        <li>description:{{ bulletin.description }}</li>
+        <li>public: {{ bulletin.public }}</li>
+    </ul>
+</p>
+<hr />
+{% endfor %}
+</body>
+</html>
