@@ -47,3 +47,6 @@ How are administrator accounts created?
 Are administrators also regular users?
 
 What should be the process for a user to create an account?
+
+##etc
+Can readers download documents? If yes, will they download the encrypted or decrypted version?
