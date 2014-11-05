@@ -10,9 +10,51 @@
 <form action="/{{ userId }}/createBulletin/" method="post">
 {% csrf_token %}
 {{ bulletinForm }}
+<select id="id_folder" name="folder">
+    <option value="0" selected="selected">No Folder</option>
+    {% for folder in folders %}
+    <option value="{{ folder.id }}">{{ folder.name }}</option>
+    {% endfor %}
+</select>
 <input type="submit" value="Submit">
 </form>
-<h2>My Bulletins</h2>
+<br />
+<h2>Create Folder</h2>
+<form action="/{{ userId }}/createFolder/" method="post">
+    {% csrf_token %}
+    <input id="id_name" maxlength="100" name="name" type="text" />
+    <input type="submit" value="submit">
+</form><br />
+<h2>Bulletin Folders</h2>
+<p><ul>
+{% for folder in folders %}
+<li><a href="/{{ userId }}/getFolder/{{ folder.id }}">{{ folder.name }}</a><br />
+<ul>
+    <li>rename folder:
+            <form action="/{{ userId }}/renameFolder/{{ folder.id }}" method="post">
+                {% csrf_token %}
+                <input id="id_name" maxlength="100" name="name" type="text" />
+                <input type="submit" value="rename">
+            </form>
+    </li>
+    <li>copy folder:
+        <form action="/{{ userId }}/copyFolder/{{ folder.id }}" method="post">
+            {% csrf_token %}
+            <input id="id_name" maxlength="100" name="name" type="text" />
+            <input type = "submit" value="copy">
+        </form>
+    </li>
+    <li>
+        <form action="/{{ userId }}/deleteFolder/{{ folder.id }}" method="delete">
+            {% csrf_token %}
+            <input type = "submit" value="delete folder">
+        </form>
+    </li>
+</ul>
+</li>
+{% endfor %}
+</ul></p><hr />
+<h2>Uncategorized Bulletins</h2>
 {% for bulletin in bulletins %}
 <p>
     <h3>{{ bulletin.name }}</h3>
@@ -39,6 +81,18 @@
                 {% csrf_token %}
                     <input id="id_name" maxlength="100" name="name" type="text" />
                 <input type = "submit" value="copy">
+            </form>
+        </li>
+        <li>Change Folder:
+            <form action="/{{ userId }}/setBulletinFolder/{{ bulletin.id }}" method="post">
+                {% csrf_token %}
+                <select id="id_folder" name="folder">
+                    <option value="0" selected="selected">No Folder</option>
+                    {% for folder in folders %}
+                        <option value="{{ folder.id }}">{{ folder.name }}</option>
+                    {% endfor %}
+                </select>
+                <input type="submit" value="Set Folder">
             </form>
         </li>
         <li>

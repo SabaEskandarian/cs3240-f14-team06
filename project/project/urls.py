@@ -10,11 +10,17 @@ urlpatterns = patterns('',
     #url(r'^admin/', include(admin.site.urls)),
     url('^$', 'SecureWitness.views.homePage'),
     url(r'^(?P<userId>[^/]+)/?$', 'SecureWitness.views.userPage'),
-    url(r'^(?P<userId>[^/]+)/getBulletins/?$', 'SecureWitness.views.getBulletins'),
-    #url(r'^(<userId>[^/]+)/bulletins/(<bulletinId>[^/]+)?$', views.getBulletin),
+    url(r'^(?P<userId>[^/]+)/getFolder/(?P<folderId>[^/]+)/?$', 'SecureWitness.views.userFolder'),
+
     url(r'^(?P<userId>[^/]+)/createBulletin/?$', 'SecureWitness.views.createBulletin'),
     url(r'^(?P<userId>[^/]+)/renameBulletin/(?P<bulletinId>[^/]+)/?$', 'SecureWitness.views.renameBulletin'),
     url(r'^(?P<userId>[^/]+)/copyBulletin/(?P<bulletinId>[^/]+)/?$', 'SecureWitness.views.copyBulletin'),
     url(r'^(?P<userId>[^/]+)/deleteBulletin/(?P<bulletinId>[^/]+)/?$', 'SecureWitness.views.deleteBulletin'),
-    #url(r'^steve/bulletins/', views.createBulletin)
+    url(r'^(?P<userId>[^/]+)/setBulletinFolder/(?P<bulletinId>[^/]+)/?$', 'SecureWitness.views.setBulletinFolder'),
+
+    url(r'^(?P<userId>[^/]+)/createFolder/?$', 'SecureWitness.views.createFolder'),
+    url(r'^(?P<userId>[^/]+)/renameFolder/(?P<folderId>[^/]+)/?$', 'SecureWitness.views.renameFolder'),
+    url(r'^(?P<userId>[^/]+)/copyFolder/(?P<folderId>[^/]+)/?$', 'SecureWitness.views.copyFolder'),
+    url(r'^(?P<userId>[^/]+)/deleteFolder/(?P<folderId>[^/]+)/?$', 'SecureWitness.views.deleteFolder')
+
 )

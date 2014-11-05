@@ -6,43 +6,53 @@ from django.http import HttpResponseRedirect
 
 #folders
 @require_http_methods(["POST"])
-def createFolder(request):
-    return
+def createFolder(request, userId):
+    data = request.POST
+    folder = models.Folder(name=data['name'])#add user later
+    folder.save()
+    return HttpResponseRedirect('/'+userId+'/')
 
-@require_http_methods(["DELETE"])
-def deleteFolder(request):
-
-    return
+#@require_http_methods(["DELETE"])
+def deleteFolder(request, userId, folderId):
+    folder = models.Folder.objects.get(pk=folderId)
+    bulletins = models.Bulletin.objects.filter(folder_id = folder.pk)
+    for bulletin in bulletins:
+        bulletin.delete()
+    folder.delete()
+    return HttpResponseRedirect('/'+userId+'/')
 
 @require_http_methods(["POST"])
-def renameFolder(request):
-    return
+def renameFolder(request, userId, folderId):
+    folder = models.Folder.objects.get(pk=folderId)
+    folder.name = request.POST['name']
+    folder.save()
+    return HttpResponseRedirect('/'+userId+'/')
 
 @require_http_methods(["POST"])
-def copyFolder(request):
-    return
-
-@require_http_methods(["GET"])
-def getFolders(request):
-    return
-
+def copyFolder(request, userId, folderId):
+    folder = models.Folder.objects.get(pk=folderId)
+    bulletins = models.Bulletin.objects.filter(folder_id = folder.pk)
+    folder.pk = None
+    folder.name = request.POST['name']
+    folder.save()
+    for bulletin in bulletins:
+        bulletin.pk = None
+        bulletin.folder = folder
+        bulletin.save()
+    return HttpResponseRedirect('/'+userId+'/')
 
 #bulletins
 @require_http_methods(["POST"])
 def createBulletin(request, userId):
     data = request.POST
-    #user = models.User.objects.get(pk=userId);
-    #user = models.User(username="abc", passHash = "def", isAdmin = False)
-    #folder = models.Folder(name = "woo", user = user)
-    #folder = models.Folder.objects.get(pk=data['folder']) may change that
     public = False
+    folder_id = 0
+    if 'folder' in data:
+        folder_id = data['folder']
     if 'public' in data:
         public = True
-    bulletin = models.Bulletin(name=data['name'], date=data['date'], location = data['location'], description = data['description'], public = public)#, folder = folder, author = user)#change author/folder later
+    bulletin = models.Bulletin(name=data['name'], date=data['date'], location = data['location'], description = data['description'], public = public, folder_id = folder_id)#, author = user)#change author later
     bulletin.save()
-    bulletins = models.Bulletin.objects.filter(author_id = userId).values() # this bit is a duplicate of the getBulletins code
-    #return render_to_response('list_bulletins.html', {'bulletins':bulletins})
-    #return showUserHome(userId, request)
     return HttpResponseRedirect('/'+userId+'/')
 
 #@require_http_methods(["DELETE"]) this was causing problems
@@ -55,6 +65,14 @@ def deleteBulletin(request, userId, bulletinId):
 def renameBulletin(request, userId, bulletinId):
     bulletin = models.Bulletin.objects.get(pk=bulletinId)
     bulletin.name = request.POST['name']
+    bulletin.save()
+    return HttpResponseRedirect('/'+userId+'/')
+
+@require_http_methods(["POST"])
+def setBulletinFolder(request, userId, bulletinId):
+    folder_id = request.POST['folder']
+    bulletin = models.Bulletin.objects.get(pk=bulletinId)
+    bulletin.folder_id=folder_id
     bulletin.save()
     return HttpResponseRedirect('/'+userId+'/')
 
@@ -72,10 +90,6 @@ def getBulletins(request, userId):
     #return render_to_response('list_bulletins.html', {'bulletins':bulletins})
     #return showUserHome(userId, request)
     return HttpResponseRedirect('/'+userId+'/')
-
-@require_http_methods(["GET"])
-def getBulletin(request, userId, bulletinId):
-    return
 
 #documents
 @require_http_methods(["POST"])
@@ -111,14 +125,25 @@ def homePage(request):
 def userPage(request, userId):
     return showUserHome(userId, request)
 
+@require_http_methods(["GET"])
+def userFolder(request, userId, folderId):
+    return showUserFolder(userId, folderId, request)
+
 #the things below are not views... maybe move them out later?
 
 #return the interface page of the user
 def showUserHome(userId, request):
     bulletinForm = BulletinForm()
-    bulletins = models.Bulletin.objects.filter(author_id = userId).values()
+    bulletins = models.Bulletin.objects.filter(author_id = userId, folder_id = 0).values()
+    folders = models.Folder.objects.filter(user_id = userId).values()
     #return render_to_response('user_home.html', {'bulletinForm': bulletinForm, 'bulletins':bulletins}, )
-    return render(request, 'user_home.html', {'userId':userId, 'bulletinForm': bulletinForm, 'bulletins':bulletins})
+    return render(request, 'user_home.html', {'userId':userId, 'bulletinForm': bulletinForm, 'bulletins':bulletins, 'folders':folders})
+
+def showUserFolder(userId, folderId, request):
+    bulletins = models.Bulletin.objects.filter(author_id = userId, folder_id = folderId).values()
+    folder = models.Folder.objects.get(id = folderId)
+    folders = models.Folder.objects.filter(user_id = userId).values()
+    return render(request, 'folder_bulletins.html', {'userId': userId, 'folder':folder, 'bulletins':bulletins, 'folders':folders})
 
 class BulletinForm(ModelForm):
     public = BooleanField(required=False)
