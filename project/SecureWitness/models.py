@@ -7,7 +7,6 @@ class User(models.Model):
     passHash = models.CharField(max_length=200)
     isAdmin = models.BooleanField(default=False)
 
-#Don't technically need this, may do away with it later
 class Folder(models.Model):
     name = models.CharField(max_length=100)
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING, default = 0)
