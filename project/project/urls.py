@@ -7,7 +7,7 @@ urlpatterns = patterns('',
     # url(r'^$', 'project.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
 
-    #url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', include(admin.site.urls)),
     url('^$', 'SecureWitness.views.homePage'),
     url(r'^(?P<userId>[^/]+)/?$', 'SecureWitness.views.userPage'),
     url(r'^(?P<userId>[^/]+)/getFolder/(?P<folderId>[^/]+)/?$', 'SecureWitness.views.userFolder'),
