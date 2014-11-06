@@ -116,7 +116,6 @@ def deleteSharing(request):
 @require_http_methods(["GET"])
 def getSharings(request):
     return
-# Create your views here.
 
 def homePage(request):
     return render_to_response('index.html')

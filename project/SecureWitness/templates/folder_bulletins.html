@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>SecureWitness - Folder View</title>
+</head>
+<body>
+<h1>{{ folder.name }}</h1>
+{% for bulletin in bulletins %}
+<p>
+    <h3>{{ bulletin.name }}</h3>
+    <h4>Information</h4>
+    <ul>
+        <li>date: {{ bulletin.date }}</li>
+        <li>location: {{ bulletin.location }}</li>
+        <li>description:{{ bulletin.description }}</li>
+        <li>public: {{ bulletin.public }}</li>
+    </ul>
+</p>
+    <p>
+        <h4>Options</h4>
+        <ul>
+            <li>Rename Bulletin:
+                <form action="/{{ userId }}/renameBulletin/{{ bulletin.id }}" method="post">
+                    {% csrf_token %}
+                    <input id="id_name" maxlength="100" name="name" type="text" />
+                    <input type="submit" value="rename">
+                </form>
+            </li>
+        <li>Copy Bulletin:
+            <form action="/{{ userId }}/copyBulletin/{{ bulletin.id }}" method="post">
+                {% csrf_token %}
+                    <input id="id_name" maxlength="100" name="name" type="text" />
+                <input type = "submit" value="copy">
+            </form>
+        </li>
+        <li>Change Folder:
+            <form action="/{{ userId }}/setBulletinFolder/{{ bulletin.id }}" method="post">
+                {% csrf_token %}
+                <select id="id_folder" name="folder">
+                    <option value="0">No Folder</option>
+                    {% for f in folders %}
+                        <option value="{{ f.id }}" {% if folder.id == f.id %}
+                        selected="selected"
+                        {% endif %} >{{ f.name }}</option>
+                    {% endfor %}
+                </select>
+                <input type="submit" value="Set Folder">
+            </form>
+        </li>
+        <li>
+            <form action="/{{ userId }}/deleteBulletin/{{ bulletin.id }}" method="delete">
+                {% csrf_token %}
+                <input type = "submit" value="delete bulletin">
+            </form>
+        </li>
+        </ul>
+    </p>
+<hr />
+{% endfor %}
+<p>
+    click <a href="/{{ userId }}/">here</a> to return to home
+</p>
+</body>
+</html>

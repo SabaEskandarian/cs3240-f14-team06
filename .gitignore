@@ -1,3 +1,9 @@
+# PyCharm project files
+*.idea
+
+# Database file
+myDb
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
