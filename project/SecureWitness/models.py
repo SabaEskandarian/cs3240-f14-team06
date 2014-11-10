@@ -1,13 +1,7 @@
 from django.db import models
+from django.contrib.auth.models import User
 import datetime
 
-#Guessing what we need for now, may change later
-class User(models.Model):
-    username = models.CharField(max_length=100)
-    passHash = models.CharField(max_length=200)
-    isAdmin = models.BooleanField(default=False)
-    def __str__(self):
-        return self.username
 
 class Folder(models.Model):
     name = models.CharField(max_length=100)
