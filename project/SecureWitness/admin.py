@@ -4,13 +4,8 @@ from SecureWitness.models import Document
 from SecureWitness.models import Bulletin
 from SecureWitness.models import Sharing
 
-class BulletinInline(admin.StackedInline):
-	model = Bulletin
-	extra = 3
-
 class FolderAdmin(admin.ModelAdmin):
 	fields=['user','name']
-	inlines = [BulletinInline]
 
 class BulletinAdmin(admin.ModelAdmin):
 	fields=['name','date']
