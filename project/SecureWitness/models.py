@@ -6,10 +6,14 @@ class User(models.Model):
     username = models.CharField(max_length=100)
     passHash = models.CharField(max_length=200)
     isAdmin = models.BooleanField(default=False)
+    def __str__(self):
+        return self.username
 
 class Folder(models.Model):
     name = models.CharField(max_length=100)
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING, default = 0)
+    def __str__(self):
+        return self.name
 
 class Bulletin(models.Model):
     name = models.CharField(max_length=100)
@@ -19,6 +23,8 @@ class Bulletin(models.Model):
     public = models.BooleanField(default=False)
     folder = models.ForeignKey(Folder, default = 0, on_delete=models.DO_NOTHING)
     author = models.ForeignKey(User, default = 0, on_delete=models.DO_NOTHING)
+    def __str__(self):
+        return self.name
 
 class Document(models.Model):
     file = models.FileField()
@@ -28,5 +34,6 @@ class Sharing(models.Model):
     author = models.ForeignKey(User, related_name='sharing_author', on_delete=models.DO_NOTHING)
     reader = models.ForeignKey(User, related_name='sharing_reader', on_delete=models.DO_NOTHING)
     bulletin = models.ForeignKey(Bulletin, on_delete=models.DO_NOTHING)
-
+    def __str__(self):
+        return self.bulletin+": " + self.author + " to " + self.reader 
 # Create your models here.

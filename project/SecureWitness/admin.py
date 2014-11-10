@@ -8,7 +8,7 @@ class FolderAdmin(admin.ModelAdmin):
 	fields=['user','name']
 
 class BulletinAdmin(admin.ModelAdmin):
-	fields=['name','date']
+	fields=['name','date','location','description','public','folder','author']
 
 # Register your models here.
 admin.site.register(Folder, FolderAdmin)
