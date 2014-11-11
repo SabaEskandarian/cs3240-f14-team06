@@ -128,6 +128,11 @@ def userPage(request, userId):
 def userFolder(request, userId, folderId):
     return showUserFolder(userId, folderId, request)
 
+#reader search
+@require_http_methods(["POST"])
+def searchRequest(request, userId):
+    return showSearchResults(userId, request.POST['query'], request)
+
 #the things below are not views... maybe move them out later?
 
 #return the interface page of the user
@@ -143,6 +148,12 @@ def showUserFolder(userId, folderId, request):
     folder = models.Folder.objects.get(id = folderId)
     folders = models.Folder.objects.filter(user_id = userId).values()
     return render(request, 'folder_bulletins.html', {'userId': userId, 'folder':folder, 'bulletins':bulletins, 'folders':folders})
+
+def showSearchResults(userId, query, request):
+    results = models.Bulletin.objects.raw("SELECT DISTINCT * FROM SecureWitness_Bulletin " +
+                                            "WHERE (author_id = %s AND (name LIKE %s OR description LIKE %s OR location LIKE %s)) " +
+                                            "OR (public = 1 AND (name LIKE %s OR description LIKE %s OR location LIKE %s))", [userId, '%'+query+'%', '%'+query+'%', '%'+query+'%', '%'+query+'%', '%'+query+'%', '%'+query+'%'])
+    return render(request, 'search_results.html', {'results': results, 'query': query, 'userId': userId})
 
 class BulletinForm(ModelForm):
     public = BooleanField(required=False)

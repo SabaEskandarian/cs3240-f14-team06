@@ -11,6 +11,7 @@ urlpatterns = patterns('',
     url('^$', 'SecureWitness.views.homePage'),
     url(r'^(?P<userId>[^/]+)/?$', 'SecureWitness.views.userPage'),
     url(r'^(?P<userId>[^/]+)/getFolder/(?P<folderId>[^/]+)/?$', 'SecureWitness.views.userFolder'),
+    url(r'^(?P<userId>[^/]+)/search/?$', 'SecureWitness.views.searchRequest'),
 
     url(r'^(?P<userId>[^/]+)/createBulletin/?$', 'SecureWitness.views.createBulletin'),
     url(r'^(?P<userId>[^/]+)/renameBulletin/(?P<bulletinId>[^/]+)/?$', 'SecureWitness.views.renameBulletin'),
