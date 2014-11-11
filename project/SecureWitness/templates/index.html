@@ -3,9 +3,19 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>SecureWitness</title>
+     {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'SecureWitness/elements.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'SecureWitness/bootstrap.css' %}" />
 </head>
 <body>
-<h1>Welcome to SecureWitness!</h1>
+	<div class="header">
+		<h1>SecureWitness</h1>
+	</div>
+	<div>
+		<h1>WELCOME TO SECUREWITNESS</h1>
+		<h2 type="button" class="btn btn-info">SIGN UP</h2>
+		<h2 type="button" class="btn btn-info">LOG IN</h2>
+	</div>
 
 </body>
 </html>
