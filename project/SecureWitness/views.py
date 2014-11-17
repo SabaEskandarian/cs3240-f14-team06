@@ -3,6 +3,23 @@ from SecureWitness import models
 from django.views.decorators.http import require_http_methods
 from django.forms import ModelForm, BooleanField
 from django.http import HttpResponseRedirect
+from django.contrib.auth import authenticate, login
+from django.http import HttpResponse
+from django.contrib.auth.models import User
+
+#user
+@require_http_methods(["POST"])
+def login(request, userId):
+    username = request.POST.get('username')
+    password = request.POST.get('password')
+    user = authenticate(username=username, password=password)
+    if user is not None:
+        if user.is_active:
+            return HttpResponse("Active User")
+        else:
+            return HttpResponse("Disabled Account")
+    else:
+        return HttpResponse('Invalid Login')
 
 #folders
 @require_http_methods(["POST"])
@@ -12,7 +29,7 @@ def createFolder(request, userId):
     folder.save()
     return HttpResponseRedirect('/'+userId+'/')
 
-#@require_http_methods(["DELETE"])
+@require_http_methods(["DELETE"])
 def deleteFolder(request, userId, folderId):
     folder = models.Folder.objects.get(pk=folderId)
     bulletins = models.Bulletin.objects.filter(folder_id = folder.pk)
