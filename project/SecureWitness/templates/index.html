@@ -4,18 +4,65 @@
     <meta charset="UTF-8">
     <title>SecureWitness</title>
      {% load staticfiles %}
-    <link rel="stylesheet" type="text/css" href="{% static 'SecureWitness/elements.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'SecureWitness/bootstrap.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'SecureWitness/elements.css' %}" />
 </head>
 <body>
-	<div class="header">
-		<h1>SecureWitness</h1>
-	</div>
-	<div>
-		<h1>WELCOME TO SECUREWITNESS</h1>
-		<h2 type="button" class="btn btn-info">SIGN UP</h2>
-		<h2 type="button" class="btn btn-info">LOG IN</h2>
-	</div>
+	<nav class="navbar navbar-default navbar-static-top" role="navigation">
+  		<div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+   			<div class="navbar-header">
+      			<a class="navbar-brand" href="#">SW</a>
+    		</div>
 
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+   				<ul class="nav navbar-nav">
+        		<li class="active"><a href="#">Sign In</a></li>
+       		 	<li><a href="#">About</a></li>
+      			</ul>
+    		</div><!-- /.navbar-collapse -->
+  		</div><!-- /.container-fluid -->
+	</nav>
+
+	<!-- Jumbotron header-->
+	<div class="jumbotron">
+		<div class="center container">
+  		<h1>Welcome to SecureWitness</h1>
+  		<p>Store, Organize, Share your documents!</p>
+  			<div class="sign-in">
+  				<div class="input-group">
+  					<span class="input-group-addon pre-form">Username</span>
+  					<input type="text" class="form-control" placeholder="Username">
+				  </div>
+
+          <div class="input-group">
+            <span class="input-group-addon pre-form">Email Address</span>
+            <input type="text" class="form-control" placeholder="hello@example.com">
+          </div>
+
+          <div class="input-group">
+            <span class="input-group-addon pre-form">Password</span>
+            <input type="text" class="form-control" placeholder="Password">
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon pre-form">Repeat Password</span>
+            <input type="text" class="form-control" placeholder="Password">
+          </div>
+  				<p><a class="btn btn-info" href="#" role="button">SIGN UP</a></p>
+  			</div>
+        <div class="sign-in">
+          <div class="input-group">
+            <span class="input-group-addon pre-form">Username</span>
+            <input type="text" class="form-control" placeholder="Username">
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon pre-form">Password</span>
+            <input type="text" class="form-control" placeholder="Password">
+          </div>
+          <p><a class="btn btn-info" href="#" role="button">LOG IN</a></p>
+        </div>
+  	</div>
+  </div>
 </body>
 </html>
