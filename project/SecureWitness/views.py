@@ -76,7 +76,7 @@ def createBulletin(request, userId):
         folder_id = data['folder']
     if 'public' in data:
         public = True
-    bulletin = models.Bulletin(name=data['name'], date=data['date'], location = data['location'], description = data['description'], public = public, folder_id = folder_id)#, author = user)#change author later
+    bulletin = models.Bulletin(name=data['name'], date=data['date'], location = data['location'], description = data['description'], public = public, folder_id = folder_id, author=userId)
     bulletin.save()
     return HttpResponseRedirect('/'+userId+'/')
 
@@ -111,7 +111,7 @@ def copyBulletin(request, userId, bulletinId):
 
 @require_http_methods(["GET"])
 def getBulletins(request, userId):
-    bulletins = models.Bulletin.objects.filter(author_id = userId).values()
+    bulletins = models.Bulletin.objects.filter(author = userId).values()
     #return render_to_response('list_bulletins.html', {'bulletins':bulletins})
     #return showUserHome(userId, request)
     return HttpResponseRedirect('/'+userId+'/')
@@ -163,20 +163,20 @@ def searchRequest(request, userId):
 #return the interface page of the user
 def showUserHome(userId, request):
     bulletinForm = BulletinForm()
-    bulletins = models.Bulletin.objects.filter(author_id = userId, folder_id = 0).values()
-    folders = models.Folder.objects.filter(user_id = userId).values()
+    bulletins = models.Bulletin.objects.filter(author = userId, folder_id = 0).values()
+    folders = models.Folder.objects.filter(user = userId).values()
     #return render_to_response('user_home.html', {'bulletinForm': bulletinForm, 'bulletins':bulletins}, )
     return render(request, 'user_home.html', {'userId':userId, 'bulletinForm': bulletinForm, 'bulletins':bulletins, 'folders':folders})
 
 def showUserFolder(userId, folderId, request):
-    bulletins = models.Bulletin.objects.filter(author_id = userId, folder_id = folderId).values()
+    bulletins = models.Bulletin.objects.filter(author = userId, folder_id = folderId).values()
     folder = models.Folder.objects.get(id = folderId)
-    folders = models.Folder.objects.filter(user_id = userId).values()
+    folders = models.Folder.objects.filter(user = userId).values()
     return render(request, 'folder_bulletins.html', {'userId': userId, 'folder':folder, 'bulletins':bulletins, 'folders':folders})
 
 def showSearchResults(userId, query, request):
     results = models.Bulletin.objects.raw("SELECT DISTINCT * FROM SecureWitness_Bulletin " +
-                                            "WHERE (author_id = %s AND (name LIKE %s OR description LIKE %s OR location LIKE %s)) " +
+                                            "WHERE (author = %s AND (name LIKE %s OR description LIKE %s OR location LIKE %s)) " +
                                             "OR (public = 1 AND (name LIKE %s OR description LIKE %s OR location LIKE %s))", [userId, '%'+query+'%', '%'+query+'%', '%'+query+'%', '%'+query+'%', '%'+query+'%', '%'+query+'%'])
     return render(request, 'search_results.html', {'results': results, 'query': query, 'userId': userId})
 
