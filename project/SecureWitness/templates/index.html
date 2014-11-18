@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <title>SecureWitness</title>
      {% load staticfiles %}
-    <link rel="stylesheet" type="text/css" href="{% static 'SecureWitness/bootstrap.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'SecureWitness/elements.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'SecureWitness/css/bootstrap.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'SecureWitness/css/elements.css' %}" />
 </head>
 <body>
 	<nav class="navbar navbar-default navbar-static-top" role="navigation">
@@ -31,6 +31,22 @@
   		<h1>Welcome to SecureWitness</h1>
   		<p>Store, Organize, Share your documents!</p>
   			<div class="sign-in">
+           <form action="/{{ userId }}/createUser/" method="post">
+           {% csrf_token %}
+            <div class="input-group">
+            <span class="input-group-addon pre-form">Username</span>
+            <input type="text" class="form-control" placeholder="Username" id="id_userName" maxlength="100" name="userName" />
+            </div>
+            <div class="input-group">
+            <span class="input-group-addon pre-form">Email Address</span>
+            <input type="text" class="form-control" placeholder="hello@example.com" id="id_email" maxlength="100" name="email" />
+            </div>
+            <div class="input-group">
+            <span class="input-group-addon pre-form">Password</span>
+            <input type="text" class="form-control" placeholder="Password" id="id_passWord" maxlength="100" name="passWord"/>
+            </div>
+            <input type="submit" value="Submit" class="btn btn-info">
+          </form>
   				<div class="input-group">
   					<span class="input-group-addon pre-form">Username</span>
   					<input type="text" class="form-control" placeholder="Username">

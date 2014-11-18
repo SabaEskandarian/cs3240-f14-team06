@@ -3,21 +3,36 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>SecureWitness</title>
-    {% load staticfiles %}
-    <link rel="stylesheet" type="text/css" href="{% static 'SecureWitness/style.css' %}" />
+    {% load staticfiles %} 
+    <link rel="stylesheet" type="text/css" href="{% static 'SecureWitness/css/bootstrap.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'SecureWitness/css/elements.css' %}" />
 </head>
 <body>
 <div class="header">
-   <h1>User Home</h1>
+  <nav class="navbar navbar-default navbar-static-top" role="navigation">
+        <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">SW</a>
+            </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Welcome!</a></li>
+                </ul>
+                <form class="navbar-form navbar-left" role="search"action="/{{ userId }}/search" method="post">
+             {% csrf_token %}
+                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                    <input id="id_query" class"form-control" palceholder ="Search" maxlength="100" name="query" type="text" />
+                    <input type="submit" class="btn btn-primary" value="search">
+            </form>
+            </div><!-- /.navbar-collapse -->
+            
+        </div><!-- /.container-fluid -->
+    </nav>
 </div>
-<p>
-    Search:
-    <form action="/{{ userId }}/search" method="post">
-        {% csrf_token %}
-        <input id="id_query" maxlength="100" name="query" type="text" />
-        <input type="submit" value="search">
-    </form>
-</p>
+
 <h2>Login</h2>
 <form action="/{{ userId }}/login/" method="post">
   {% csrf_token %}
@@ -33,6 +48,9 @@
   Password:  <input id="id_passWord" maxlength="100" name="passWord" type="text" />
   <input type="submit" value="Submit">
 </form><br />
+
+<!--create bulletin-->
+<div class="create panel panel-primary">
 <h2>Create a Bulletin</h2>
 <form action="/{{ userId }}/createBulletin/" method="post">
 {% csrf_token %}
@@ -45,6 +63,9 @@
 </select>
 <input type="submit" value="Submit">
 </form>
+</div>
+
+
 <br />
 <h2>Create Folder</h2>
 <form action="/{{ userId }}/createFolder/" method="post">

@@ -6,6 +6,8 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
 from django.contrib.auth.models import User
+from django.template import RequestContext
+from django.shortcuts import render_to_response
 
 #user
 @require_http_methods(["POST"])
@@ -22,7 +24,7 @@ def login(request, userId):
         return HttpResponse('Invalid Login')
 
 @require_http_methods(["POST"])
-def createUser(request, userId):
+def createUser(request,userId):
     data = request.POST
     user = User.objects.create_user(username=data['userName'], email=data['email'], password=data['passWord'])
     user.save()
