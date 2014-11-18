@@ -10,8 +10,8 @@ from django.contrib.auth.models import User
 #user
 @require_http_methods(["POST"])
 def login(request, userId):
-    username = request.POST.get('username')
-    password = request.POST.get('password')
+    username = request.POST['userName']
+    password = request.POST['passWord']
     user = authenticate(username=username, password=password)
     if user is not None:
         if user.is_active:
@@ -20,6 +20,14 @@ def login(request, userId):
             return HttpResponse("Disabled Account")
     else:
         return HttpResponse('Invalid Login')
+
+@require_http_methods(["POST"])
+def createUser(request, userId):
+    data = request.POST
+    user = User.objects.create_user(username=data['userName'], email=data['email'], password=data['passWord'])
+    user.save()
+    return HttpResponse("User Created!")
+
 
 #folders
 @require_http_methods(["POST"])

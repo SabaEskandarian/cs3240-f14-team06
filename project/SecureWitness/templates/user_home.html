@@ -19,12 +19,20 @@
     </form>
 </p>
 <h2>Login</h2>
-<form action="{{ userId }}/login/" method="post">
+<form action="/{{ userId }}/login/" method="post">
   {% csrf_token %}
-  Username:  <input maxlength="100" username="username" type="text" />
-  Password:  <input maxlength="100" password="password" type="text" />
+  Username:  <input id="id_userName" maxlength="100" name="userName" type="text" />
+  Password:  <input id="id_passWord" maxlength="100" name="passWord" type="text" />
   <input type="submit" value="Submit">
 </form>
+<h2>Create User</h2>
+<form action="/{{ userId }}/createUser/" method="post">
+  {% csrf_token %}
+  Username:  <input id="id_userName" maxlength="100" name="userName" type="text" />
+  Email:  <input id="id_email" maxlength="100" name="email" type="text" />
+  Password:  <input id="id_passWord" maxlength="100" name="passWord" type="text" />
+  <input type="submit" value="Submit">
+</form><br />
 <h2>Create a Bulletin</h2>
 <form action="/{{ userId }}/createBulletin/" method="post">
 {% csrf_token %}
