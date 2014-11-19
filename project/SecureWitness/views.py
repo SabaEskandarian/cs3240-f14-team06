@@ -7,6 +7,8 @@ from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.core.servers.basehttp import FileWrapper
+from django.template import RequestContext
+from django.shortcuts import render_to_response
 
 #user
 @require_http_methods(["POST"])
@@ -23,7 +25,7 @@ def login(request, userId):
         return HttpResponse('Invalid Login')
 
 @require_http_methods(["POST"])
-def createUser(request, userId):
+def createUser(request,userId):
     data = request.POST
     user = User.objects.create_user(username=data['userName'], email=data['email'], password=data['passWord'])
     user.save()
@@ -84,6 +86,9 @@ def createBulletin(request, userId):
 #@require_http_methods(["DELETE"]) this was causing problems
 def deleteBulletin(request, userId, bulletinId):
     bulletin = models.Bulletin.objects.get(pk=bulletinId)
+    documents = models.Document.objects.filter(user=bulletin.author)
+    for document in documents:
+        document.delete()
     bulletin.delete()
     return HttpResponseRedirect('/'+userId+'/')
 
