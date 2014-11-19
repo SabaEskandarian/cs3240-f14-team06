@@ -3,6 +3,9 @@ from django.contrib.auth.models import User
 import datetime
 
 
+def place_document(instance, filename):
+    return 'documents/'+instance.user+'/'+str(instance.bulletin.id)+'/'+filename
+
 class Folder(models.Model):
     name = models.CharField(max_length=100)
     user = models.CharField(max_length=100)
@@ -21,13 +24,14 @@ class Bulletin(models.Model):
         return self.name
 
 class Document(models.Model):
-    file = models.FileField()
+    file = models.FileField(upload_to=place_document)
     bulletin = models.ForeignKey(Bulletin, on_delete=models.DO_NOTHING)
+    user = models.CharField(max_length=100)
 
 class Sharing(models.Model):
     author = models.CharField(max_length=100)
     reader = models.CharField(max_length=100)
     bulletin = models.ForeignKey(Bulletin, on_delete=models.DO_NOTHING)
     def __str__(self):
-        return self.bulletin+": " + self.author + " to " + self.reader 
-# Create your models here.
+        return self.bulletin+": " + self.author + " to " + self.reader
+

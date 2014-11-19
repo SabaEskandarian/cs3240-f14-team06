@@ -6,6 +6,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
 from django.contrib.auth.models import User
+from django.core.servers.basehttp import FileWrapper
 
 #user
 @require_http_methods(["POST"])
@@ -33,7 +34,7 @@ def createUser(request, userId):
 @require_http_methods(["POST"])
 def createFolder(request, userId):
     data = request.POST
-    folder = models.Folder(name=data['name'])#add user later
+    folder = models.Folder(name=data['name'], user=userId)
     folder.save()
     return HttpResponseRedirect('/'+userId+'/')
 
@@ -118,16 +119,18 @@ def getBulletins(request, userId):
 
 #documents
 @require_http_methods(["POST"])
-def createDocument(request):
-    return
-
-@require_http_methods(["DELETE"])
-def deleteDocument(request):
-    return
+def addDocument(request, userId, bulletinId):
+    file = request.FILES['doc']
+    doc = models.Document(file = file, bulletin_id = bulletinId, user=userId)
+    doc.save()
+    return HttpResponseRedirect('/'+userId+'/')
 
 @require_http_methods(["GET"])
-def getDocuments(request):
-    return
+def getDocument(request, userId, bulletinId, fileName):
+    response = HttpResponse(FileWrapper(open('documents/'+userId+'/'+bulletinId+'/'+fileName)), content_type='application/force-download')
+    response['Content-Disposition'] = 'attachment; filename='+fileName
+    response['X-Sendfile'] = 'documents/'+userId+'/'+bulletinId+'/'+fileName
+    return response
 
 #sharing
 @require_http_methods(["POST"])
@@ -165,14 +168,16 @@ def showUserHome(userId, request):
     bulletinForm = BulletinForm()
     bulletins = models.Bulletin.objects.filter(author = userId, folder_id = 0).values()
     folders = models.Folder.objects.filter(user = userId).values()
+    docs = models.Document.objects.filter(user = userId).values()
     #return render_to_response('user_home.html', {'bulletinForm': bulletinForm, 'bulletins':bulletins}, )
-    return render(request, 'user_home.html', {'userId':userId, 'bulletinForm': bulletinForm, 'bulletins':bulletins, 'folders':folders})
+    return render(request, 'user_home.html', {'userId':userId, 'bulletinForm': bulletinForm, 'bulletins':bulletins, 'folders':folders, 'documents':docs})
 
 def showUserFolder(userId, folderId, request):
     bulletins = models.Bulletin.objects.filter(author = userId, folder_id = folderId).values()
     folder = models.Folder.objects.get(id = folderId)
     folders = models.Folder.objects.filter(user = userId).values()
-    return render(request, 'folder_bulletins.html', {'userId': userId, 'folder':folder, 'bulletins':bulletins, 'folders':folders})
+    docs = models.Document.objects.filter(user = userId).values()
+    return render(request, 'folder_bulletins.html', {'userId': userId, 'folder':folder, 'bulletins':bulletins, 'folders':folders, 'documents':docs})
 
 def showSearchResults(userId, query, request):
     results = models.Bulletin.objects.raw("SELECT DISTINCT * FROM SecureWitness_Bulletin " +

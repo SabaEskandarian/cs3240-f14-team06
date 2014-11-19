@@ -15,11 +15,27 @@
         <li>location: {{ bulletin.location }}</li>
         <li>description:{{ bulletin.description }}</li>
         <li>public: {{ bulletin.public }}</li>
+        <li>documents:
+            <ul>
+                {% for doc in documents %}
+                    {% if doc.user == userId %}
+                        <li><a href="/{{ doc.file }}">{{ doc.file }}</a></li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </li>
     </ul>
 </p>
     <p>
         <h4>Options</h4>
         <ul>
+            <li>Add Document:
+                <form action="/{{ userId }}/addDocument/{{ bulletin.id }}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="file" name="doc"/>
+                    <input type="submit" value="addDoc">
+                </form>
+            </li>
             <li>Rename Bulletin:
                 <form action="/{{ userId }}/renameBulletin/{{ bulletin.id }}" method="post">
                     {% csrf_token %}
