@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>SecureWitness</title>
+    {% load staticfiles %} 
+    <link rel="stylesheet" type="text/css" href="{% static 'SecureWitness/css/bootstrap.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'SecureWitness/css/elements.css' %}" />
+</head>
+<body>
+{% block content %}
+
+	<form action = "/accounts/auth/" method="post">{% csrf_token %}
+		<label for = "username">User Name:</label>
+		<input type="text" name ="username" value = "" id="username">
+		<label for = "passowrd">Password</label>
+		<input type="password" name ="password" value = "" id="password">
+		<input type="submit" value = "login" />
+
+	</form>
+{% endblock %}
+</body>

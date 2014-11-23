@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+     {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'SecureWitness/css/bootstrap.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'SecureWitness/css/elements.css' %}" />
+</head>
+{% block content %}
+	<h2> Hi {{full_name}} Logged In</h2>
+	<p> Click <a href="/accounts/logout/">Here</a> to logout.</p>
+{% endblock %}

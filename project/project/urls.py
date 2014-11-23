@@ -27,7 +27,13 @@ urlpatterns = patterns('',
     url(r'^(?P<userId>[^/]+)/copyFolder/(?P<folderId>[^/]+)/?$', 'SecureWitness.views.copyFolder'),
     url(r'^(?P<userId>[^/]+)/deleteFolder/(?P<folderId>[^/]+)/?$', 'SecureWitness.views.deleteFolder'),
 
- url(r'^(?P<userId>[^/]+)/login/?$', 'SecureWitness.views.login'),
- url(r'^(?P<userId>[^/]+)/createUser/?$', 'SecureWitness.views.createUser')
+    url(r'^(?P<userId>[^/]+)/login/?$', 'SecureWitness.views.login'),
+    url(r'^(?P<userId>[^/]+)/createUser/?$', 'SecureWitness.views.createUser'),
+   
 
+
+   
+    url(r'^logout/$', 'SecureWitness.views.logout'),
+    url(r'^loggedin/$', 'SecureWitness.views.loggedin'),
+    url(r'^invalid/$', 'SecureWitness.views.invalid_login'),
 )

@@ -9,6 +9,8 @@ from django.contrib.auth.models import User
 from django.core.servers.basehttp import FileWrapper
 from django.template import RequestContext
 from django.shortcuts import render_to_response
+from django.core.context_processors import csrf
+from django.contrib import auth
 
 #user
 @require_http_methods(["POST"])
@@ -18,11 +20,11 @@ def login(request, userId):
     user = authenticate(username=username, password=password)
     if user is not None:
         if user.is_active:
-            return HttpResponse("Active User")
+            return render_to_response('loggedin.html', {'full_name': request.user.username})
         else:
             return HttpResponse("Disabled Account")
     else:
-        return HttpResponse('Invalid Login')
+        return render_to_response('invalid_login.html')
 
 @require_http_methods(["POST"])
 def createUser(request,userId):
@@ -32,6 +34,19 @@ def createUser(request,userId):
     return HttpResponse("User Created!")
 
 
+
+def loggedin(request):
+    return render_to_response('loggedin.html',
+        {'full_name': request.user.username})
+
+
+def invalid_login(request):
+
+    return render_to_response('invalid_login.html')
+
+def logout(request):
+    auth.logout(request)
+    return render_to_response('logout.html')
 #folders
 @require_http_methods(["POST"])
 def createFolder(request, userId):
