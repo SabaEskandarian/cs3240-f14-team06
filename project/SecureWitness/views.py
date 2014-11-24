@@ -2,26 +2,23 @@ from django.shortcuts import render, render_to_response
 from SecureWitness import models
 from django.views.decorators.http import require_http_methods
 from django.forms import ModelForm, BooleanField
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth import authenticate, login
-from django.http import HttpResponse
-from django.contrib.auth.models import User
 from django.core.servers.basehttp import FileWrapper
 from django.template import RequestContext, loader
-from django.shortcuts import render_to_response
 from django.core.context_processors import csrf
 from django.contrib import auth
 
 #user
 @require_http_methods(["POST"])
-def login(request, userId):
+def loginUser(request, userId):
     username = request.POST['userName']
     password = request.POST['passWord']
     user = authenticate(username=username, password=password)
     if user is not None:
         if user.is_active:
-            #login(request, user)
-            return render_to_response('loggedin.html', {'full_name': request.user.username})
+            login(request, user)
+            return render_to_response('loggedin.html', {'full_name': username})
         else:
             return HttpResponse("Disabled Account")
     else:
@@ -33,6 +30,11 @@ def createUser(request,userId):
     user = User.objects.create_user(username=data['userName'], email=data['email'], password=data['passWord'])
     user.save()
     return HttpResponse("User Created!")
+
+def disableUser(request, userId):
+    request.user.is_active = False
+    request.user.save()
+    return HttpResponse("You have disabled your account.")
 
 def loggedin(request):
     return render_to_response('loggedin.html',

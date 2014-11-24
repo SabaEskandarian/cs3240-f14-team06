@@ -34,7 +34,7 @@
 </div>
 
 <h2>Login</h2>
-<form action="/{{ userId }}/login/" method="post">
+<form action="/{{ userId }}/loginUser/" method="post">
   {% csrf_token %}
   Username:  <input id="id_userName" maxlength="100" name="userName" type="text" />
   Password:  <input id="id_passWord" maxlength="100" name="passWord" type="text" />
@@ -48,6 +48,12 @@
   Password:  <input id="id_passWord" maxlength="100" name="passWord" type="text" />
   <input type="submit" value="Submit">
 </form><br />
+<h2>Disable Account</h2>
+<form action="/{{ userId }}/disableUser/" method="post">
+  {% csrf_token %}
+  <input type="submit" value="Submit">
+</form><br />
+
 
 <!--create bulletin-->
 <div class="create panel panel-primary">
