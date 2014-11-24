@@ -8,28 +8,34 @@ from django.core.servers.basehttp import FileWrapper
 from django.template import RequestContext, loader
 from django.core.context_processors import csrf
 from django.contrib import auth
-
+from django.contrib.auth.models import User
 #user
 @require_http_methods(["POST"])
-def loginUser(request, userId):
+def loginUser(request):
     username = request.POST['userName']
     password = request.POST['passWord']
     user = authenticate(username=username, password=password)
     if user is not None:
         if user.is_active:
             login(request, user)
-            return render_to_response('loggedin.html', {'full_name': username})
+            return render(request, 'loggedin.html', {'full_name': username})
         else:
             return HttpResponse("Disabled Account")
     else:
-        return render_to_response('invalid_login.html')
+        return render(request,'invalid_login.html')
 
 @require_http_methods(["POST"])
-def createUser(request,userId):
+def createUser(request):
     data = request.POST
-    user = User.objects.create_user(username=data['userName'], email=data['email'], password=data['passWord'])
-    user.save()
-    return HttpResponse("User Created!")
+    try:
+        user = User.objects.create_user(username=data['userName'], email=data['email'], password=data['passWord'])
+        user.save()
+        return HttpResponse("User Created!")
+    except:
+        return HttpResponse("User already exists!")
+  
+
+
 
 def disableUser(request, userId):
     request.user.is_active = False
@@ -37,15 +43,15 @@ def disableUser(request, userId):
     return HttpResponse("You have disabled your account.")
 
 def loggedin(request):
-    return render_to_response('loggedin.html',
+    return render(request,'loggedin.html',
         {'full_name': request.user.username})
 
 def invalid_login(request):
-    return render_to_response('invalid_login.html')
+    return render(request,'invalid_login.html')
 
 def logout(request):
     auth.logout(request)
-    return render_to_response('logout.html')
+    return render(request,'logout.html')
 
 #folders
 @require_http_methods(["POST"])
@@ -166,7 +172,7 @@ def getSharings(request):
     return
 
 def homePage(request):
-    return render_to_response('index.html')
+    return render(request,'index.html')
 
 @require_http_methods(["GET"])
 def userPage(request, userId):

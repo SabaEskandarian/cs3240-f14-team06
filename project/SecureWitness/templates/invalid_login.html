@@ -7,6 +7,22 @@
     <link rel="stylesheet" type="text/css" href="{% static 'SecureWitness/css/elements.css' %}" />
 </head>
 {% block content %}
+    <nav class="navbar navbar-default navbar-static-top" role="navigation">
+        <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <a class="navbar-brand" href="{%url 'homePage' %}">SecureWitness</a>
+            </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+    <!--            <ul class="nav navbar-nav">
+                <li><a href="#">About</a></li>
+            </ul> -->
+
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
 	<h2> Your login details are invalid</h2>
-	<p> Click <a href="/loginUser/"> Here </a> to login again.</p>
+	<p> Click <a  href="{%url 'homePage' %}"> Here </a> to login again.</p>
 {% endblock %}

@@ -13,7 +13,7 @@
         <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
-                <a class="navbar-brand" href="#">SW</a>
+                <a class="navbar-brand" href="{%url 'homePage' %}">SW</a>
             </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -34,7 +34,7 @@
 </div>
 
 <h2>Login</h2>
-<form action="/{{ userId }}/loginUser/" method="post">
+<form action="/loginUser/" method="post">
   {% csrf_token %}
   Username:  <input id="id_userName" maxlength="100" name="userName" type="text" />
   Password:  <input id="id_passWord" maxlength="100" name="passWord" type="text" />

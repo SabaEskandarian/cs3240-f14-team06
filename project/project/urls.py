@@ -4,11 +4,19 @@ from SecureWitness import views
 
 urlpatterns = patterns('',
     # Examples:
-    # url(r'^$', 'project.views.home', name='home'),
+    url(r'^$', 'SecureWitness.views.homePage', name='homePage'),
     # url(r'^blog/', include('blog.urls')),
 
     url(r'^admin/', include(admin.site.urls)),
     url('^$', 'SecureWitness.views.homePage'),
+
+    url(r'^loginUser/?$', 'SecureWitness.views.loginUser'),
+    url(r'^createUser/?$', 'SecureWitness.views.createUser'),
+
+
+    url(r'^(?P<userId>[^/]+)/disableUser/?$', 'SecureWitness.views.disableUser'),
+
+
     url(r'^(?P<userId>[^/]+)/?$', 'SecureWitness.views.userPage'),
     url(r'^(?P<userId>[^/]+)/getFolder/(?P<folderId>[^/]+)/?$', 'SecureWitness.views.userFolder'),
     url(r'^(?P<userId>[^/]+)/search/?$', 'SecureWitness.views.searchRequest'),
@@ -27,9 +35,6 @@ urlpatterns = patterns('',
     url(r'^(?P<userId>[^/]+)/copyFolder/(?P<folderId>[^/]+)/?$', 'SecureWitness.views.copyFolder'),
     url(r'^(?P<userId>[^/]+)/deleteFolder/(?P<folderId>[^/]+)/?$', 'SecureWitness.views.deleteFolder'),
 
-    url(r'^(?P<userId>[^/]+)/loginUser/', 'SecureWitness.views.loginUser'),
-    url(r'^(?P<userId>[^/]+)/createUser/?$', 'SecureWitness.views.createUser'),
-   url(r'^(?P<userId>[^/]+)/disableUser/?$', 'SecureWitness.views.disableUser'),
 
 
    
