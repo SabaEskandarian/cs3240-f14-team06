@@ -9,7 +9,7 @@
 {% for bulletin in bulletins %}
 <p>
     <h3>{{ bulletin.name }}</h3>
-    <h4>Information</h4>
+    <h4>Information</h4> <form action="/{{ userId }}/editBulletinPage/{{ bulletin.id }}" method="GET"><input type="submit" value="Edit" /></form>
     <ul>
         <li>date: {{ bulletin.date }}</li>
         <li>location: {{ bulletin.location }}</li>
@@ -19,7 +19,7 @@
             <ul>
                 {% for doc in documents %}
                     {% if doc.user == userId %}
-                        <li><a href="/{{ doc.file }}">{{ doc.file }}</a></li>
+                        <li><a href="/{{ doc.file }}">{{ doc.file }}</a> <form action="/deleteDocument/{{ doc.file }}" method="GET"><input type="submit" value="Delete" /></form></li>
                     {% endif %}
                 {% endfor %}
             </ul>
@@ -54,11 +54,9 @@
             <form action="/{{ userId }}/setBulletinFolder/{{ bulletin.id }}" method="post">
                 {% csrf_token %}
                 <select id="id_folder" name="folder">
-                    <option value="0">No Folder</option>
-                    {% for f in folders %}
-                        <option value="{{ f.id }}" {% if folder.id == f.id %}
-                        selected="selected"
-                        {% endif %} >{{ f.name }}</option>
+                    <option value="0" selected="selected">No Folder</option>
+                    {% for folder in folders %}
+                        <option value="{{ folder.id }}">{{ folder.name }}</option>
                     {% endfor %}
                 </select>
                 <input type="submit" value="Set Folder">
