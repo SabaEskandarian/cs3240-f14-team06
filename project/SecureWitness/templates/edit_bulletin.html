@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>SecureWitness - Folder View</title>
+</head>
+<body>
+<h1>Edit {{ bulletin.name }} ({{ bulletin.id }})</h1>
+<p>Please enter data only in fields that you wish to modify.</p>
+<form action="/{{ userId }}/editBulletin/{{ bulletin.id }}" method="post">
+{% csrf_token %}
+{{ bulletinForm }}
+<input type="submit" value="Submit">
+</form>
+
+<p>
+    click <a href="/{{ userId }}/">here</a> to return to home
+</p>
+</body>
+</html>

@@ -23,9 +23,11 @@ urlpatterns = patterns('',
 
     url(r'^(?P<userId>[^/]+)/createBulletin/?$', 'SecureWitness.views.createBulletin'),
     url(r'^(?P<userId>[^/]+)/renameBulletin/(?P<bulletinId>[^/]+)/?$', 'SecureWitness.views.renameBulletin'),
+    url(r'^(?P<userId>[^/]+)/editBulletin/(?P<bulletinId>[^/]+)/?$', 'SecureWitness.views.editBulletin'),
     url(r'^(?P<userId>[^/]+)/copyBulletin/(?P<bulletinId>[^/]+)/?$', 'SecureWitness.views.copyBulletin'),
     url(r'^(?P<userId>[^/]+)/deleteBulletin/(?P<bulletinId>[^/]+)/?$', 'SecureWitness.views.deleteBulletin'),
     url(r'^(?P<userId>[^/]+)/setBulletinFolder/(?P<bulletinId>[^/]+)/?$', 'SecureWitness.views.setBulletinFolder'),
+    url(r'^(?P<userId>[^/]+)/editBulletinPage/(?P<bulletinId>[^/]+)/?$', 'SecureWitness.views.userEdit'),
 
     url(r'^(?P<userId>[^/]+)/addDocument/(?P<bulletinId>[^/]+)/?$', 'SecureWitness.views.addDocument'),
     url(r'^deleteDocument/documents/(?P<userId>[^/]+)/(?P<bulletinId>[^/]+)/(?P<fileName>[^/]+)/?$', 'SecureWitness.views.deleteDocument'),

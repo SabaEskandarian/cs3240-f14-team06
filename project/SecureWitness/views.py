@@ -122,6 +122,24 @@ def renameBulletin(request, userId, bulletinId):
     return HttpResponseRedirect('/'+userId+'/')
 
 @require_http_methods(["POST"])
+def editBulletin(request, userId, bulletinId):
+    data = request.POST
+    #only make a change if a new value is given
+    bulletin = models.Bulletin.objects.get(pk=bulletinId)
+    if(data["date"] and data["date"] != ""):
+        bulletin.date = data["date"]
+    if(data["location"] and data["location"] != ""):
+        bulletin.location = data["location"]
+    if 'public' in data:
+        bulletin.public = True
+    if(data["description"] and data["description"] != ""):
+        bulletin.description = data["description"]
+    if(data["name"] and data["name"] != ""):
+        bulletin.name = data["name"]
+    bulletin.save()
+    return HttpResponseRedirect('/'+userId+'/')
+
+@require_http_methods(["POST"])
 def setBulletinFolder(request, userId, bulletinId):
     folder_id = request.POST['folder']
     bulletin = models.Bulletin.objects.get(pk=bulletinId)
@@ -189,6 +207,10 @@ def userPage(request, userId):
 def userFolder(request, userId, folderId):
     return showUserFolder(userId, folderId, request)
 
+@require_http_methods(["GET"])
+def userEdit(request, userId, bulletinId):
+    return showEdit(userId, bulletinId, request)
+
 #reader search
 @require_http_methods(["POST"])
 def searchRequest(request, userId):
@@ -217,6 +239,11 @@ def showSearchResults(userId, query, request):
                                             "WHERE (author = %s AND (name LIKE %s OR description LIKE %s OR location LIKE %s)) " +
                                             "OR (public = 1 AND (name LIKE %s OR description LIKE %s OR location LIKE %s))", [userId, '%'+query+'%', '%'+query+'%', '%'+query+'%', '%'+query+'%', '%'+query+'%', '%'+query+'%'])
     return render(request, 'search_results.html', {'results': results, 'query': query, 'userId': userId})
+
+def showEdit(userId, bulletinId, request):
+    bulletinForm = BulletinForm()
+    bulletin = models.Bulletin.objects.get(id=bulletinId)
+    return render(request, 'edit_bulletin.html', {'bulletinForm': bulletinForm, 'userId': userId, 'bulletin':bulletin})
 
 class BulletinForm(ModelForm):
     public = BooleanField(required=False)
