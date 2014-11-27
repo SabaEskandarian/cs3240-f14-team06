@@ -109,6 +109,7 @@ def deleteBulletin(request, userId, bulletinId):
     bulletin = models.Bulletin.objects.get(pk=bulletinId)
     documents = models.Document.objects.filter(user=bulletin.author)
     for document in documents:
+        document.file.delete()
         document.delete()
     bulletin.delete()
     return HttpResponseRedirect('/'+userId+'/')
@@ -157,6 +158,12 @@ def getDocument(request, userId, bulletinId, fileName):
     response['Content-Disposition'] = 'attachment; filename='+fileName
     response['X-Sendfile'] = 'documents/'+userId+'/'+bulletinId+'/'+fileName
     return response
+
+def deleteDocument(request, userId, bulletinId, fileName):
+    document = models.Document.objects.get(user = userId, bulletin_id = bulletinId, file = 'documents/'+userId+'/'+bulletinId+'/'+fileName)
+    document.file.delete()
+    document.delete()
+    return HttpResponseRedirect('/'+userId+'/')
 
 #sharing
 @require_http_methods(["POST"])

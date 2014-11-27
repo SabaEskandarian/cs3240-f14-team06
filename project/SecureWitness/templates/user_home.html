@@ -32,7 +32,7 @@
         </div><!-- /.container-fluid -->
     </nav>
 </div>
-
+<!--
 <h2>Login</h2>
 <form action="/loginUser/" method="post">
   {% csrf_token %}
@@ -47,7 +47,7 @@
   Email:  <input id="id_email" maxlength="100" name="email" type="text" />
   Password:  <input id="id_passWord" maxlength="100" name="passWord" type="text" />
   <input type="submit" value="Submit">
-</form><br />
+</form><br />-->
 <h2>Disable Account</h2>
 <form action="/{{ userId }}/disableUser/" method="post">
   {% csrf_token %}
@@ -122,7 +122,7 @@
             <ul>
                 {% for doc in documents %}
                     {% if doc.user == userId %}
-                        <li><a href="/{{ doc.file }}">{{ doc.file }}</a></li>
+                        <li><a href="/{{ doc.file }}">{{ doc.file }}</a> <form action="/deleteDocument/{{ doc.file }}"><input type="submit" value="Delete" /></form></li>
                     {% endif %}
                 {% endfor %}
             </ul>

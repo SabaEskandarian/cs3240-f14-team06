@@ -28,6 +28,7 @@ urlpatterns = patterns('',
     url(r'^(?P<userId>[^/]+)/setBulletinFolder/(?P<bulletinId>[^/]+)/?$', 'SecureWitness.views.setBulletinFolder'),
 
     url(r'^(?P<userId>[^/]+)/addDocument/(?P<bulletinId>[^/]+)/?$', 'SecureWitness.views.addDocument'),
+    url(r'^deleteDocument/documents/(?P<userId>[^/]+)/(?P<bulletinId>[^/]+)/(?P<fileName>[^/]+)/?$', 'SecureWitness.views.deleteDocument'),
     url(r'^documents/(?P<userId>[^/]+)/(?P<bulletinId>[^/]+)/(?P<fileName>[^/]+)/?$', 'SecureWitness.views.getDocument'),
 
     url(r'^(?P<userId>[^/]+)/createFolder/?$', 'SecureWitness.views.createFolder'),
