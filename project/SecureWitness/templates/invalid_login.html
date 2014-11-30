@@ -7,6 +7,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'SecureWitness/css/elements.css' %}" />
 </head>
 {% block content %}
+<body>
     <nav class="navbar navbar-default navbar-static-top" role="navigation">
         <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -23,6 +24,17 @@
             </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
     </nav>
-	<h2> Your login details are invalid</h2>
-	<p> Click <a  href="{%url 'homePage' %}"> Here </a> to login again.</p>
+    <div class="alert alert-danger" role="alert" style="height:400px">
+		<h4> Your login details are invalid</h4>
+		<p> Click <a  href="{%url 'homePage' %}"> Here </a> to login again.</p>
+	</div>
+	<hr>
+	<footer>
+        <p>&copy; Karen Dang, Carina Cai, Saba Eskandarian, Ted Xie CS3240 Fall2014 </p>
+    </footer>
+</body>
 {% endblock %}
+</html>
+
+
+

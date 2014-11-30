@@ -2,32 +2,37 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>SecureWitness</title>
+    <title>SecureWitness {{userId}}</title>
     {% load staticfiles %} 
     <link rel="stylesheet" type="text/css" href="{% static 'SecureWitness/css/bootstrap.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'SecureWitness/css/elements.css' %}" />
 </head>
+{% block content %}
 <body>
 <div class="header">
   <nav class="navbar navbar-default navbar-static-top" role="navigation">
         <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
-                <a class="navbar-brand" href="{%url 'homePage' %}">SW</a>
+                <a class="navbar-brand" href="{%url 'homePage' %}">SecureWitness</a>
             </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Welcome!</a></li>
-                </ul>
                 <form class="navbar-form navbar-left" role="search"action="/{{ userId }}/search" method="post">
-             {% csrf_token %}
+                    {% csrf_token %}
                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                     <input id="id_query" class"form-control" palceholder ="Search" maxlength="100" name="query" type="text" />
                     <input type="submit" class="btn btn-primary" value="search">
-            </form>
-            </div><!-- /.navbar-collapse -->
+                </form>
+            <ul class="nav navbar-nav navbar-right">
+                <li><form action="/accounts/logout/" method="post">  {% csrf_token %}
+                    <input type ="submit"class="btn btn-info"  value ="Log Out"></form></li>
+                <li><form action = "/{{ userId }}/disableUser/"  method ="post">{% csrf_token %}
+                    <input type = "submit"  class="btn btn-info" value ="Disable Account"></form></li>
+            </ul>
+            </div>
+            <!-- /.navbar-collapse -->
             
         </div><!-- /.container-fluid -->
     </nav>
@@ -47,133 +52,171 @@
   Email:  <input id="id_email" maxlength="100" name="email" type="text" />
   Password:  <input id="id_passWord" maxlength="100" name="passWord" type="text" />
   <input type="submit" value="Submit">
-</form><br />-->
+</form><br />
+
 <h2>Disable Account</h2>
 <form action="/{{ userId }}/disableUser/" method="post">
   {% csrf_token %}
   <input type="submit" value="Submit">
-</form><br />
+</form><br /> -->
 
+<div class="jumbotron center">
+    <h1>{{userId}}, Welcome!</12>
+</div>
 
+<div class="center">
 <!--create bulletin-->
-<div class="create panel panel-primary">
-<h2>Create a Bulletin</h2>
-<form action="/{{ userId }}/createBulletin/" method="post">
-{% csrf_token %}
-{{ bulletinForm }}
-<select id="id_folder" name="folder">
-    <option value="0" selected="selected">No Folder</option>
-    {% for folder in folders %}
-    <option value="{{ folder.id }}">{{ folder.name }}</option>
-    {% endfor %}
-</select>
-<input type="submit" value="Submit">
-</form>
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <div class="panel-title"><h4>Create a Bulletin</h4></div>
+    </div>
+    <div class="panel-body">
+        <form action="/{{ userId }}/createBulletin/" method="post">
+        {% csrf_token %}
+        {{ bulletinForm }} <br>
+
+        <select id="id_folder" name="folder">
+            <option value="0" selected="selected">No Folder</option>
+            {% for folder in folders %}
+            <option value="{{ folder.id }}">{{ folder.name }}</option>
+            {% endfor %}
+        </select><br/>
+        <input type="submit" class="btn btn-default" value="Create">
+        </form>
+    </div>
 </div>
 
 
-<br />
-<h2>Create Folder</h2>
-<form action="/{{ userId }}/createFolder/" method="post">
-    {% csrf_token %}
-    <input id="id_name" maxlength="100" name="name" type="text" />
-    <input type="submit" value="submit">
-</form><br />
-<h2>Bulletin Folders</h2>
-<p><ul>
-{% for folder in folders %}
-<li><a href="/{{ userId }}/getFolder/{{ folder.id }}">{{ folder.name }}</a><br />
-<ul>
-    <li>rename folder:
-            <form action="/{{ userId }}/renameFolder/{{ folder.id }}" method="post">
-                {% csrf_token %}
-                <input id="id_name" maxlength="100" name="name" type="text" />
-                <input type="submit" value="rename">
-            </form>
-    </li>
-    <li>copy folder:
-        <form action="/{{ userId }}/copyFolder/{{ folder.id }}" method="post">
-            {% csrf_token %}
-            <input id="id_name" maxlength="100" name="name" type="text" />
-            <input type = "submit" value="copy">
-        </form>
-    </li>
-    <li>
-        <form action="/{{ userId }}/deleteFolder/{{ folder.id }}" method="delete">
-            {% csrf_token %}
-            <input type = "submit" value="delete folder">
-        </form>
-    </li>
-</ul>
-</li>
-{% endfor %}
-</ul></p><hr />
-<h2>Uncategorized Bulletins</h2>
-{% for bulletin in bulletins %}
-<p>
-    <h3>{{ bulletin.name }}</h3>
-    <h4>Information</h4> <form action="/{{ userId }}/editBulletinPage/{{ bulletin.id }}" method="GET"><input type="submit" value="Edit" /></form>
-    <ul>
-        <li>date: {{ bulletin.date }}</li>
-        <li>location: {{ bulletin.location }}</li>
-        <li>description:{{ bulletin.description }}</li>
-        <li>public: {{ bulletin.public }}</li>
-        <li>documents:
-            <ul>
-                {% for doc in documents %}
-                    {% if doc.user == userId %}
-                        <li><a href="/{{ doc.file }}">{{ doc.file }}</a> <form action="/deleteDocument/{{ doc.file }}" method="GET"><input type="submit" value="Delete" /></form></li>
-                    {% endif %}
-                {% endfor %}
-            </ul>
-        </li>
-    </ul>
-</p>
-    <p>
-        <h4>Options</h4>
+<br/>
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <div class="panel-title"><h4>Create Folder</h4></div>
+    </div>
+    <div class="panel-body">
+    <form action="/{{ userId }}/createFolder/" method="post">
+        {% csrf_token %}
+        <input id="id_name" maxlength="100" name="name" type="text" />
+        <input type="submit" class="btn btn-default"value="submit">
+    </form><br/>
+    </div>
+</div>
+
+
+
+<div class="panel panel-success">
+    <div class="panel-heading">
+        <div class="panel-title"><h4>Bulletin Folders</h4></div>
+    </div>
+    <div class="panel-body">
+        <p><ul>
+        {% for folder in folders %}
+        <li><a href="/{{ userId }}/getFolder/{{ folder.id }}">{{ folder.name }}</a><br />
         <ul>
-            <li>Add Document:
-                <form action="/{{ userId }}/addDocument/{{ bulletin.id }}" method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <input type="file" name="doc"/>
-                    <input type="submit" value="addDoc">
-                </form>
+            <li>rename folder:
+                    <form action="/{{ userId }}/renameFolder/{{ folder.id }}" method="post">
+                        {% csrf_token %}
+                        <input id="id_name" maxlength="100" name="name" type="text" />
+                        <input type="submit" class="btn btn-default"value="Rename">
+                    </form>
             </li>
-            <li>Rename Bulletin:
-                <form action="/{{ userId }}/renameBulletin/{{ bulletin.id }}" method="post">
+            <li>copy folder:
+                <form action="/{{ userId }}/copyFolder/{{ folder.id }}" method="post">
                     {% csrf_token %}
                     <input id="id_name" maxlength="100" name="name" type="text" />
-                    <input type="submit" value="rename">
+                    <input type = "submit" class="btn btn-default"value="Copy">
                 </form>
             </li>
-        <li>Copy Bulletin:
-            <form action="/{{ userId }}/copyBulletin/{{ bulletin.id }}" method="post">
-                {% csrf_token %}
-                    <input id="id_name" maxlength="100" name="name" type="text" />
-                <input type = "submit" value="copy">
-            </form>
-        </li>
-        <li>Change Folder:
-            <form action="/{{ userId }}/setBulletinFolder/{{ bulletin.id }}" method="post">
-                {% csrf_token %}
-                <select id="id_folder" name="folder">
-                    <option value="0" selected="selected">No Folder</option>
-                    {% for folder in folders %}
-                        <option value="{{ folder.id }}">{{ folder.name }}</option>
-                    {% endfor %}
-                </select>
-                <input type="submit" value="Set Folder">
-            </form>
-        </li>
-        <li>
-            <form action="/{{ userId }}/deleteBulletin/{{ bulletin.id }}" method="delete">
-                {% csrf_token %}
-                <input type = "submit" value="delete bulletin">
-            </form>
-        </li>
+            <li>
+                <form action="/{{ userId }}/deleteFolder/{{ folder.id }}" method="delete">
+                    {% csrf_token %}
+                    <input type = "submit" class="btn btn-default"value="Delete Folder">
+                </form>
+            </li>
         </ul>
-    </p>
-<hr />
-{% endfor %}
+        </li>
+        {% endfor %}
+        </ul></p><hr />
+    </div>
+</div>
+
+<div class= "panel panel-warning">
+    <div class="panel-heading">
+        <div class="panel-title"><h4>Uncategorized Bulletins</h4></div>
+    </div>
+    <div class="panel-body">
+        {% for bulletin in bulletins %}
+        <p>
+            <h3>{{ bulletin.name }}</h3>
+            <h4>Information</h4> <form action="/{{ userId }}/editBulletinPage/{{ bulletin.id }}" method="GET"><input type="submit"  class="btn btn-default"  value="Edit" /></form>
+            <ul>
+                <li>date: {{ bulletin.date }}</li>
+                <li>location: {{ bulletin.location }}</li>
+                <li>description:{{ bulletin.description }}</li>
+                <li>public: {{ bulletin.public }}</li>
+                <li>documents:
+                    <ul>
+                        {% for doc in documents %}
+                            {% if doc.user == userId %}
+                                <li><a href="/{{ doc.file }}">{{ doc.file }}</a> <form action="/deleteDocument/{{ doc.file }}" method="GET"><input type="submit"  class="btn btn-default"  value="Delete" /></form></li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </li>
+            </ul>
+        </p>
+            <p>
+                <h4>Options</h4>
+                <ul>
+                    <li>Add Document:
+                        <form action="/{{ userId }}/addDocument/{{ bulletin.id }}" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <span><input type="file" name="doc"/></span>
+                            <span><input type="submit" class="btn btn-default" value="Add Doc"></span>
+                        </form>
+                    </li>
+                    <li>Rename Bulletin:
+                        <form action="/{{ userId }}/renameBulletin/{{ bulletin.id }}" method="post">
+                            {% csrf_token %}
+                            <input id="id_name" maxlength="100" name="name" type="text" />
+                            <input type="submit"  class="btn btn-default"  value="rename">
+                        </form>
+                    </li>
+                <li>Copy Bulletin:
+                    <form action="/{{ userId }}/copyBulletin/{{ bulletin.id }}" method="post">
+                        {% csrf_token %}
+                            <input id="id_name" maxlength="100" name="name" type="text" />
+                        <input type = "submit"  class="btn btn-default"  value="Copy">
+                    </form>
+                </li>
+                <li>Change Folder:
+                    <form action="/{{ userId }}/setBulletinFolder/{{ bulletin.id }}" method="post">
+                        {% csrf_token %}
+                        <select id="id_folder" name="folder">
+                            <option value="0" selected="selected">No Folder</option>
+                            {% for folder in folders %}
+                                <option value="{{ folder.id }}">{{ folder.name }}</option>
+                            {% endfor %}
+                        </select>
+                        <input type="submit"  class="btn btn-default"  value="Set Folder">
+                    </form>
+                </li>
+                <li>
+                    <form action="/{{ userId }}/deleteBulletin/{{ bulletin.id }}" method="delete">
+                        {% csrf_token %}
+                        <input type = "submit"  class="btn btn-default"  value="Delete Bulletin">
+                    </form>
+                </li>
+                </ul>
+            </p>
+        </div>
+        <hr />
+        {% endfor %}
+    </div>
+</div>
+<hr>
+<footer>
+        <p>&copy; Karen Dang, Carina Cai, Saba Eskandarian, Ted Xie CS3240 Fall2014 </p>
+</footer>
 </body>
+{% endblock %}
 </html>
