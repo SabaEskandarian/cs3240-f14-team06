@@ -9,17 +9,19 @@ from django.template import RequestContext, loader
 from django.core.context_processors import csrf
 from django.contrib import auth
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 #user
 @require_http_methods(["POST"])
 def loginUser(request):
     username = request.POST['userName']
     password = request.POST['passWord']
     user = authenticate(username=username, password=password)
+    if request.user.is_authenticated():
+        return render(request, 'already_logged_in.html', {'user_name': request.user.username})
     if user is not None:
         if user.is_active:
             login(request, user)
-            userId = username
-            return showUserHome(userId, request)
+            return showUserHome(username, request)
         else:
             return render(request, 'disabled_account.html')
     else:
@@ -96,6 +98,7 @@ def copyFolder(request, userId, folderId):
     return showUserHome(userId, request)
 
 #bulletins
+@login_required(login_url='/index')
 @require_http_methods(["POST"])
 def createBulletin(request, userId):
     data = request.POST
