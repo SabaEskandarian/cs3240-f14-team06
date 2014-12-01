@@ -21,7 +21,7 @@ def loginUser(request):
             userId = username
             return showUserHome(userId, request)
         else:
-            return HttpResponse("Disabled Account")
+            return render(request, 'disabled_account.html')
     else:
         return render(request,'invalid_login.html')
 
@@ -31,9 +31,9 @@ def createUser(request):
     try:
         user = User.objects.create_user(username=data['userName'], email=data['email'], password=data['passWord'])
         user.save()
-        return HttpResponse("User Created!")
+        return render(request, 'user_created.html')
     except:
-        return HttpResponse("User already exists!")
+        return render(request, 'invalid_user_creation.html')
   
 
 
@@ -41,7 +41,7 @@ def createUser(request):
 def disableUser(request, userId):
     request.user.is_active = False
     request.user.save()
-    return HttpResponse("You have disabled your account.")
+    return render(request, 'disabled_account.html')
 
 def loggedin(request):
     return render(request,'loggedin.html',
