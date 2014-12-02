@@ -156,7 +156,7 @@
                 <li>documents:
                     <ul>
                         {% for doc in documents %}
-                            {% if doc.user == userId %}
+                            {% if doc.bulletin_id == bulletin.id %}
                                 <li><a href="/{{ doc.file }}">{{ doc.file }}</a> <form action="/deleteDocument/{{ doc.file }}" method="GET"><input type="submit"  class="btn btn-default"  value="Delete" /></form></li>
                             {% endif %}
                         {% endfor %}
