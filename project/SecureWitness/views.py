@@ -12,6 +12,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from subprocess import call
 import encryption
+
 #user
 @require_http_methods(["POST"])
 def loginUser(request):
@@ -23,7 +24,7 @@ def loginUser(request):
     if user is not None:
         if user.is_active:
             login(request, user)
-            return showUserHome(username, request)
+            return HttpResponseRedirect('/'+username+'/')
         else:
             return render(request, 'disabled_account.html')
     else:
@@ -250,6 +251,8 @@ def searchRequest(request, userId):
 
 #return the interface page of the user
 def showUserHome(userId, request):
+    if request.user.username != userId:
+        return render(request, 'not_allowed.html')
     bulletinForm = BulletinForm()
     bulletins = models.Bulletin.objects.filter(author = userId, folder_id = 0).values()
     folders = models.Folder.objects.filter(user = userId).values()
