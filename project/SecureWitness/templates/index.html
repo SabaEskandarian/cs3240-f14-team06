@@ -35,15 +35,15 @@
             <form action="/createUser/" method="post">{% csrf_token %}
             <div class="input-group">
             <span class="input-group-addon pre-form">Username</span>
-            <input type="text" class="form-control" placeholder="userName" id="id_userName" maxlength="100" name="userName" />
+            <input type="text" class="form-control" placeholder="userName" id="id_userName" maxlength="100" name="userName"autocomplete="off" />
             </div>
             <div class="input-group">
             <span class="input-group-addon pre-form">Email Address</span>
-            <input type="text" class="form-control" placeholder="hello@example.com" id="id_email" maxlength="100" name="email" />
+            <input type="text" class="form-control" placeholder="hello@example.com" id="id_email" maxlength="100" name="email"autocomplete="off" />
             </div>
             <div class="input-group">
             <span class="input-group-addon pre-form">Password</span>
-            <input type="text" class="form-control" placeholder="Password" id="id_passWord" maxlength="100" name="passWord"/>
+            <input type="text" class="form-control" placeholder="Password" id="id_passWord" maxlength="100" name="passWord" autocomplete="off"/>
             </div>
             <input type="submit" value="Sign Up" class="btn btn-info">
           </form>
@@ -53,11 +53,11 @@
           <form action="/loginUser/" method="post">{% csrf_token %}
           <div class="input-group">
             <span class="input-group-addon pre-form">Username</span>
-            <input type="text" class="form-control" placeholder="Username" id="id_userName" maxlength="100" name="userName" >
+            <input type="text" class="form-control" placeholder="Username" id="id_userName" maxlength="100" name="userName" autocomplete="off" >
           </div>
           <div class="input-group">
             <span class="input-group-addon pre-form">Password</span>
-            <input type="text" class="form-control" placeholder="Password"  id="id_passWord" maxlength="100" name="passWord">
+            <input type="text" class="form-control" placeholder="Password"  id="id_passWord" maxlength="100" name="passWord" autocomplete="off">
           </div>
            <input type="submit" value="Log In" class="btn btn-info">
         </div> 
