@@ -10,6 +10,9 @@ from django.core.context_processors import csrf
 from django.contrib import auth
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from subprocess import call
+import encryption
+
 #user
 @require_http_methods(["POST"])
 def loginUser(request):
@@ -21,7 +24,7 @@ def loginUser(request):
     if user is not None:
         if user.is_active:
             login(request, user)
-            return showUserHome(username, request)
+            return HttpResponseRedirect('/'+username+'/')
         else:
             return render(request, 'disabled_account.html')
     else:
@@ -36,9 +39,6 @@ def createUser(request):
         return render(request, 'user_created.html')
     except:
         return render(request, 'invalid_user_creation.html')
-  
-
-
 
 def disableUser(request, userId):
     request.user.is_active = False
@@ -65,7 +65,7 @@ def createFolder(request, userId):
     return HttpResponseRedirect('/'+userId+'/')
     #return showUserHome(userId, request)
 
-@require_http_methods(["DELETE"])
+#@require_http_methods(["DELETE"])
 def deleteFolder(request, userId, folderId):
     folder = models.Folder.objects.get(pk=folderId)
     bulletins = models.Bulletin.objects.filter(folder_id = folder.pk)
@@ -182,8 +182,14 @@ def addDocument(request, userId, bulletinId):
     file = request.FILES['doc']
     doc = models.Document(file = file, bulletin_id = bulletinId, user=userId)
     doc.save()
-    return HttpResponseRedirect('/'+userId+'/')
-    #return showUserHome(userId, request)
+    call(["touch", "outfile"])
+    prevURL = doc.file.url
+    unencrypted = open(doc.file.url, 'r+')
+    encryption.encrypt(unencrypted, open("outfile", 'r+'), str(userId) + str(bulletinId) + str(doc.file.url))
+    call(["rm", "-rf", prevURL])
+    call(["mv", "outfile", prevURL])
+    #return HttpResponseRedirect('/'+userId+'/')
+    return showUserHome(userId, request)
 
 @require_http_methods(["POST"])
 def addPic(request,userId):
@@ -194,9 +200,15 @@ def addPic(request,userId):
 
 @require_http_methods(["GET"])
 def getDocument(request, userId, bulletinId, fileName):
-    response = HttpResponse(FileWrapper(open('documents/'+userId+'/'+bulletinId+'/'+fileName)), content_type='application/force-download')
+    call(["touch", "outfile"])
+    out = open('outfile', 'r+')
+    encrypted = open('documents/'+userId+'/'+bulletinId+'/'+fileName)
+    encryption.decrypt(encrypted, out, str(userId) + str(bulletinId) + str('documents/'+userId+'/'+bulletinId+'/'+fileName))
+    out.close()
+    response = HttpResponse(FileWrapper(open('outfile', 'r+')), content_type='application/force-download')
     response['Content-Disposition'] = 'attachment; filename='+fileName
     response['X-Sendfile'] = 'documents/'+userId+'/'+bulletinId+'/'+fileName
+    call(['rm', '-rf', 'outfile'])
     return response
 
 @require_http_methods(["GET"])
@@ -250,6 +262,8 @@ def searchRequest(request, userId):
 
 #return the interface page of the user
 def showUserHome(userId, request):
+    if request.user.username != userId:
+        return render(request, 'not_allowed.html', {'userId': request.user.username})
     bulletinForm = BulletinForm()
     bulletins = models.Bulletin.objects.filter(author = userId, folder_id = 0).values()
     folders = models.Folder.objects.filter(user = userId).values()
