@@ -39,9 +39,6 @@ def createUser(request):
         return render(request, 'user_created.html')
     except:
         return render(request, 'invalid_user_creation.html')
-  
-
-
 
 def disableUser(request, userId):
     request.user.is_active = False
@@ -68,7 +65,7 @@ def createFolder(request, userId):
     return HttpResponseRedirect('/'+userId+'/')
     #return showUserHome(userId, request)
 
-@require_http_methods(["DELETE"])
+#@require_http_methods(["DELETE"])
 def deleteFolder(request, userId, folderId):
     folder = models.Folder.objects.get(pk=folderId)
     bulletins = models.Bulletin.objects.filter(folder_id = folder.pk)
@@ -258,7 +255,7 @@ def searchRequest(request, userId):
 #return the interface page of the user
 def showUserHome(userId, request):
     if request.user.username != userId:
-        return render(request, 'not_allowed.html')
+        return render(request, 'not_allowed.html', {'userId': request.user.username})
     bulletinForm = BulletinForm()
     bulletins = models.Bulletin.objects.filter(author = userId, folder_id = 0).values()
     folders = models.Folder.objects.filter(user = userId).values()

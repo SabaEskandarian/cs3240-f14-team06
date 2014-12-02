@@ -27,8 +27,8 @@
 	<div style="height:400px"  class="alert alert-success" role="alert" >
 	<h2> {{user_name}} is already logged in.</h2>
 	<p> Click <a href="/">Here</a> to return to the home page.</p>
-                <li><form action="/accounts/logout/" method="post">  {% csrf_token %}
-                    <input type ="submit"class="btn btn-info"  value ="Log Out"></form></li>
+                <form action="/accounts/logout/" method="post">  {% csrf_token %}
+                    <input type ="submit"class="btn btn-info"  value ="Log Out"></form>
 	</div>
 <hr/>
 <footer>
