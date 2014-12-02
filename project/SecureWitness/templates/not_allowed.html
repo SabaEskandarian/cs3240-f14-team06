@@ -25,12 +25,15 @@
         </div><!-- /.container-fluid -->
     </nav>
     <div class="alert alert-danger" role="alert" style="height:400px">
-	<h2> That username has already been taken.</h2>
-	<p> Click <a href="/"> Here </a> to return to the homepage.</p>
+		<h4> Your are not allowed to access this page.</h4>
+		<p> Click <a  href="{%url 'homePage' %}"> Here </a> to return to the homepage.</p>
+<p> Click <a  href="{{userId}}"> Here </a> to return to your user homepage.</p>
 	</div>
-	 <hr>
-    <footer>
+	<hr>
+	<footer>
         <p>&copy; Karen Dang, Carina Cai, Saba Eskandarian, Ted Xie CS3240 Fall2014 </p>
     </footer>
 </body>
 {% endblock %}
+</html>
+

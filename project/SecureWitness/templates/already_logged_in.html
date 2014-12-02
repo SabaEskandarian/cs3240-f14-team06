@@ -7,8 +7,33 @@
     <link rel="stylesheet" type="text/css" href="{% static 'SecureWitness/css/elements.css' %}" />
 </head>
 {% block content %}
-	<h2>{{user_name}} is already logged in.</h2>
-	<p> Click <a href="/"> Here </a> to return to the homepage.</p>
-    <li><form action="/accounts/logout/" method="post">  {% csrf_token %}
-                    <input type ="submit"class="btn btn-info"  value ="Log Out"></form></li>
+<body>
+	<nav class="navbar navbar-default navbar-static-top" role="navigation">
+  		<div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+   			<div class="navbar-header">
+      			<a class="navbar-brand" href="{%url 'homePage' %}">SecureWitness</a>
+    		</div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+   	<!--			<ul class="nav navbar-nav">
+       		 	<li><a href="#">About</a></li>
+      		</ul> -->
+
+    		</div><!-- /.navbar-collapse -->
+  		</div><!-- /.container-fluid -->
+	</nav>
+	<div style="height:400px"  class="alert alert-success" role="alert" >
+	<h2> {{user_name}} is already logged in.</h2>
+	<p> Click <a href="/">Here</a> to return to the home page.</p>
+                <form action="/accounts/logout/" method="post">  {% csrf_token %}
+                    <input type ="submit"class="btn btn-info"  value ="Log Out"></form>
+	</div>
+<hr/>
+<footer>
+     <p>&copy; Karen Dang, Carina Cai, Saba Eskandarian, Ted Xie CS3240 Fall2014 </p>
+</footer>
+
+</body>
 {% endblock %}
