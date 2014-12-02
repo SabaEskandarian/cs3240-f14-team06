@@ -65,7 +65,7 @@ def createFolder(request, userId):
     return HttpResponseRedirect('/'+userId+'/')
     #return showUserHome(userId, request)
 
-@require_http_methods(["DELETE"])
+#@require_http_methods(["DELETE"])
 def deleteFolder(request, userId, folderId):
     folder = models.Folder.objects.get(pk=folderId)
     bulletins = models.Bulletin.objects.filter(folder_id = folder.pk)
