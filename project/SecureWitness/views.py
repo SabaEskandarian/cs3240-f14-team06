@@ -185,20 +185,26 @@ def addDocument(request, userId, bulletinId):
     file = request.FILES['doc']
     doc = models.Document(file = file, bulletin_id = bulletinId, user=userId)
     doc.save()
-    call("touch", "outfile")
+    call(["touch", "outfile"])
     prevURL = doc.file.url
     unencrypted = open(doc.file.url, 'r+')
-    encryption.encrypt(unencrypted, outfile, str(userId) + str(bulletinId) + str(doc.file.url))
-    call("rm", "-rf", prevURL)
-    call("mv", "outfile", prevURL)
+    encryption.encrypt(unencrypted, open("outfile", 'r+'), str(userId) + str(bulletinId) + str(doc.file.url))
+    call(["rm", "-rf", prevURL])
+    call(["mv", "outfile", prevURL])
     #return HttpResponseRedirect('/'+userId+'/')
     return showUserHome(userId, request)
 
 @require_http_methods(["GET"])
 def getDocument(request, userId, bulletinId, fileName):
-    response = HttpResponse(FileWrapper(open('documents/'+userId+'/'+bulletinId+'/'+fileName)), content_type='application/force-download')
+    call(["touch", "outfile"])
+    out = open('outfile', 'r+')
+    encrypted = open('documents/'+userId+'/'+bulletinId+'/'+fileName)
+    encryption.decrypt(encrypted, out, str(userId) + str(bulletinId) + str('documents/'+userId+'/'+bulletinId+'/'+fileName))
+    out.close()
+    response = HttpResponse(FileWrapper(open('outfile', 'r+')), content_type='application/force-download')
     response['Content-Disposition'] = 'attachment; filename='+fileName
     response['X-Sendfile'] = 'documents/'+userId+'/'+bulletinId+'/'+fileName
+    call(['rm', '-rf', 'outfile'])
     return response
 
 def deleteDocument(request, userId, bulletinId, fileName):
