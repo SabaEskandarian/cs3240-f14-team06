@@ -185,11 +185,25 @@ def addDocument(request, userId, bulletinId):
     return HttpResponseRedirect('/'+userId+'/')
     #return showUserHome(userId, request)
 
+@require_http_methods(["POST"])
+def addPic(request,userId):
+    file =request.FILES['pic']
+    pic = models.ProfilePic(file = file, user = userId)
+    pic.save()
+    return HttpResponseRedirect('/'+userId+'/')
+
 @require_http_methods(["GET"])
 def getDocument(request, userId, bulletinId, fileName):
     response = HttpResponse(FileWrapper(open('documents/'+userId+'/'+bulletinId+'/'+fileName)), content_type='application/force-download')
     response['Content-Disposition'] = 'attachment; filename='+fileName
     response['X-Sendfile'] = 'documents/'+userId+'/'+bulletinId+'/'+fileName
+    return response
+
+@require_http_methods(["GET"])
+def getProfile(request, userId, fileName):
+    response = HttpResponse(FileWrapper(open('documents/'+userId+'/'+fileName)), content_type='application/force-download')
+    response['Content-Disposition'] = 'attachment; filename='+fileName
+    response['X-Sendfile'] = 'documents/'+userId+'/'+fileName
     return response
 
 def deleteDocument(request, userId, bulletinId, fileName):
@@ -240,8 +254,9 @@ def showUserHome(userId, request):
     bulletins = models.Bulletin.objects.filter(author = userId, folder_id = 0).values()
     folders = models.Folder.objects.filter(user = userId).values()
     docs = models.Document.objects.filter(user = userId).values()
+    profPic = models.ProfilePic.objects.get(user = userId)
     #return render_to_response('user_home.html', {'bulletinForm': bulletinForm, 'bulletins':bulletins}, )
-    return render(request, 'user_home.html', {'userId':userId, 'bulletinForm': bulletinForm, 'bulletins':bulletins, 'folders':folders, 'documents':docs})
+    return render(request, 'user_home.html', {'userId':userId, 'bulletinForm': bulletinForm, 'bulletins':bulletins, 'folders':folders, 'documents':docs, 'pic': profPic})
 
 def showUserFolder(userId, folderId, request):
     bulletins = models.Bulletin.objects.filter(author = userId, folder_id = folderId).values()

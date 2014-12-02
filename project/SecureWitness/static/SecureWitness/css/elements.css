@@ -8,3 +8,6 @@
 .pre-form{
 	min-width: 150px;
 }
+.float_left{
+	float:left;
+}
