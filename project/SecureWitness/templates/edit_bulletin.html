@@ -38,17 +38,23 @@
 </div>
 
 
-<h1>Edit {{ bulletin.name }} ({{ bulletin.id }})</h1>
-<p>Please enter data only in fields that you wish to modify.</p>
-<form action="/{{ userId }}/editBulletin/{{ bulletin.id }}" method="post">
-{% csrf_token %}
-{{ bulletinForm }}
-<input type="submit" value="Submit">
-</form>
-
-<p>
-    click <a href="/{{ userId }}/">here</a> to return to home
-</p>
+<div class="panel panel-warning">
+	<div class="panel-heading">
+		<div class="panel-title"><h3>Edit {{ bulletin.name }} ({{ bulletin.id }})</h3></div>
+	</div>
+	<div class="panel-body">
+		<p class="">Please enter data only in fields that you wish to modify.</p>
+		<div class="center">
+		<form action="/{{ userId }}/editBulletin/{{ bulletin.id }}" method="post">
+		{% csrf_token %}
+		{{ bulletinForm }}<br>
+		<input type="submit" class="btn btn-warning" value="Submit">
+		</form> 
+		</div>
+	</div>
+</div>
+    <p>click <a href="/user/{{userId}}/">here</a> to return to home
+	</p>
 <hr/>
     <footer>
         <p>&copy; Karen Dang, Carina Cai, Saba Eskandarian, Ted Xie CS3240 Fall2014 </p>

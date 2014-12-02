@@ -10,12 +10,11 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url('^$', 'SecureWitness.views.homePage'),
 
-
+    
     url(r'^loginUser/?$', 'SecureWitness.views.loginUser'),
     url(r'^createUser/?$', 'SecureWitness.views.createUser'),
-
-    url(r'^(?P<userId>[^/]+)/?$', 'SecureWitness.views.showUserHome'),
-
+    url(r'^(?P<userId>[^/]+)/?$', 'SecureWitness.views.userPage'),
+    url(r'^user/(?P<userId>[^/]+)/?$', 'SecureWitness.views.userPage'),
     url(r'^(?P<userId>[^/]+)/disableUser/?$', 'SecureWitness.views.disableUser'),
 
    

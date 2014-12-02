@@ -36,22 +36,29 @@
         </div><!-- /.container-fluid -->
     </nav>
 </div>
-<h1>Search Results for {{ query }}</h1>
-{% for bulletin in results %}
-<p>
-    <h3>{{ bulletin.name }}</h3>
-    <h4>Information</h4>
-    <ul>
-        <li>date: {{ bulletin.date }}</li>
-        <li>location: {{ bulletin.location }}</li>
-        <li>description:{{ bulletin.description }}</li>
-        <li>public: {{ bulletin.public }}</li>
+<div class="panel panel-success">
+    <div class="panel-heading">
+        <div class="panel-title"><h2>Search Results for {{ query }}</h2></div>
+    </div>
+<!-- List group -->
+  <ul class="list-group">
+  {% for bulletin in results %}
+    <li class="list-group-item">
+        <h3>{{ bulletin.name }}</h3>
+        <h4>Information</h4>
+        <ul>
+            <li>date: {{ bulletin.date }}</li>
+            <li>location: {{ bulletin.location }}</li>
+            <li>description:{{ bulletin.description }}</li>
+            <li>public: {{ bulletin.public }}</li>
+        </ul>
+    </li>
+    {% endfor %}
     </ul>
-</p>
-<hr/>
-{% endfor %}
+</div>
+
 <p>
-    click <a href="/{{ userId }}/">here</a> to return to home
+    click <a href="/user/{{userId}}/">here</a> to return to home
 </p>
 <hr/>
 <footer>
