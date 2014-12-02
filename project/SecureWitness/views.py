@@ -10,6 +10,8 @@ from django.core.context_processors import csrf
 from django.contrib import auth
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from subprocess import call
+import encryption
 #user
 @require_http_methods(["POST"])
 def loginUser(request):
@@ -183,6 +185,12 @@ def addDocument(request, userId, bulletinId):
     file = request.FILES['doc']
     doc = models.Document(file = file, bulletin_id = bulletinId, user=userId)
     doc.save()
+    call("touch", "outfile")
+    prevURL = doc.file.url
+    unencrypted = open(doc.file.url, 'r+')
+    encryption.encrypt(unencrypted, outfile, str(userId) + str(bulletinId) + str(doc.file.url))
+    call("rm", "-rf", prevURL)
+    call("mv", "outfile", prevURL)
     #return HttpResponseRedirect('/'+userId+'/')
     return showUserHome(userId, request)
 
