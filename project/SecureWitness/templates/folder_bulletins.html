@@ -38,76 +38,81 @@
     </nav>
 </div>
 
-
-<h1>{{ folder.name }}</h1>
-{% for bulletin in bulletins %}
-<p>
-    <h3>{{ bulletin.name }}</h3>
-    <h4>Information</h4> <form action="/{{ userId }}/editBulletinPage/{{ bulletin.id }}" method="GET"><input type="submit" value="Edit" /></form>
-    <ul>
-        <li>date: {{ bulletin.date }}</li>
-        <li>location: {{ bulletin.location }}</li>
-        <li>description:{{ bulletin.description }}</li>
-        <li>public: {{ bulletin.public }}</li>
-        <li>documents:
-            <ul>
-                {% for doc in documents %}
-                    {% if doc.user == userId %}
-                        <li><a href="/{{ doc.file }}">{{ doc.file }}</a> <form action="/deleteDocument/{{ doc.file }}" method="GET"><input type="submit" value="Delete" /></form></li>
-                    {% endif %}
-                {% endfor %}
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <div class="panel-title"><h2>{{ folder.name }}</h2></div>
+    </div>
+    <ul class="list-group">
+    {% for bulletin in bulletins %}
+        <li class="list-group-item">
+            <h3>{{ bulletin.name }}</h3>
+            <form action="/{{ userId }}/editBulletinPage/{{ bulletin.id }}" method="GET"><input type="submit" class="btn btn-default" value="Edit" /></form>
+            <ul class="list-group">
+                <li class="list-group-item">date: {{ bulletin.date }}</li>
+                <li class="list-group-item">location: {{ bulletin.location }}</li>
+                <li class="list-group-item">description:{{ bulletin.description }}</li>
+                <li class="list-group-item">public: {{ bulletin.public }}</li>
+                <li class="list-group-item">documents:
+                    <ul>
+                        {% for doc in documents %}
+                            {% if doc.bulletin_id == bulletin.id%}
+                                <li><a href="/{{ doc.file }}">{{ doc.file }}</a> <form action="/deleteDocument/{{ doc.file }}" method="GET"><input type="submit" class="btn btn-warning"value="Delete" /></form></li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </li>
             </ul>
-        </li>
-    </ul>
-</p>
-    <p>
-        <h4>Options</h4>
-        <ul>
-            <li>Add Document:
+            
+        <hr>
+        <h4>More Options</h4>
+        <ul class="list-group">
+            <li class="list-group-item">Add Document:
                 <form action="/{{ userId }}/addDocument/{{ bulletin.id }}" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <input type="file" name="doc"/>
-                    <input type="submit" value="addDoc">
+                    <input type="submit" class="btn btn-default"value="addDoc">
                 </form>
             </li>
-            <li>Rename Bulletin:
+            <li class="list-group-item">Rename Bulletin:
                 <form action="/{{ userId }}/renameBulletin/{{ bulletin.id }}" method="post">
                     {% csrf_token %}
-                    <input id="id_name" maxlength="100" name="name" type="text" />
-                    <input type="submit" value="rename">
+                    <input id="id_name" name="name" type="text" />
+                    <input type="submit" class="btn btn-default" value="rename">
                 </form>
             </li>
-        <li>Copy Bulletin:
-            <form action="/{{ userId }}/copyBulletin/{{ bulletin.id }}" method="post">
-                {% csrf_token %}
-                    <input id="id_name" maxlength="100" name="name" type="text" />
-                <input type = "submit" value="copy">
-            </form>
-        </li>
-        <li>Change Folder:
-            <form action="/{{ userId }}/setBulletinFolder/{{ bulletin.id }}" method="post">
-                {% csrf_token %}
-                <select id="id_folder" name="folder">
-                    <option value="0" selected="selected">No Folder</option>
-                    {% for folder in folders %}
-                        <option value="{{ folder.id }}">{{ folder.name }}</option>
-                    {% endfor %}
-                </select>
-                <input type="submit" value="Set Folder">
-            </form>
-        </li>
-        <li>
-            <form action="/{{ userId }}/deleteBulletin/{{ bulletin.id }}" method="delete">
-                {% csrf_token %}
-                <input type = "submit" value="delete bulletin">
-            </form>
-        </li>
+            <li class="list-group-item">Copy Bulletin:
+                <form action="/{{ userId }}/copyBulletin/{{ bulletin.id }}" method="post">
+                    {% csrf_token %}
+                        <input id="id_name" maxlength="100" name="name" type="text" />
+                    <input type = "submit" class="btn btn-default" value="copy">
+                </form>
+            </li>
+            <li class="list-group-item">Change Folder:
+                <form action="/{{ userId }}/setBulletinFolder/{{ bulletin.id }}" method="post">
+                    {% csrf_token %}
+                    <select id="id_folder" name="folder">
+                        <option value="0" selected="selected">No Folder</option>
+                        {% for folder in folders %}
+                            <option value="{{ folder.id }}">{{ folder.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="submit" class="btn btn-default" value="Set Folder">
+                </form>
+            </li>
+            <li class="list-group-item">
+                <form action="/{{ userId }}/deleteBulletin/{{ bulletin.id }}" method="delete">
+                    {% csrf_token %}
+                    <input type = "submit" class="btn btn-default" value="delete bulletin">
+                </form>
+            </li>
         </ul>
-    </p>
-<hr />
-{% endfor %}
+    </li>
+    {% endfor %}
+    </ul>
+</div>
+
 <p>
-    click <a href="/{{ userId }}/">here</a> to return to home
+    click <a href="/user/{{userId}}/">Here </a> to return to home
 </p>
 
     <hr/>
