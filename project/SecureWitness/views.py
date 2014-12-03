@@ -188,26 +188,30 @@ def generatePassword():
 #documents
 @require_http_methods(["POST"])
 def addDocument(request, userId, bulletinId):
-    file = request.FILES['doc']
-    doc = models.Document(file = file, bulletin_id = bulletinId, user=userId)
-    doc.save()
-    if models.Bulletin.objects.get(pk=bulletinId).public == False:
-        call(["touch", "outfile"]) 
-        prevURL = doc.file.url
-        unencrypted = open(doc.file.url, 'r+')
-        #encryption.encrypt(unencrypted, open("outfile", 'r+'), str(userId) + str(bulletinId) + str(doc.file.url))
-        encryption.encrypt(unencrypted, open('outfile', 'r+'), generatePassword())
-        call(["rm", "-rf", prevURL])
-        call(["mv", "outfile", prevURL])
-    #return HttpResponseRedirect('/'+userId+'/')
-    return showUserHome(userId, request)
+    try:
+        file = request.FILES['doc']
+        doc = models.Document(file = file, bulletin_id = bulletinId, user=userId)
+        doc.save()
+        if models.Bulletin.objects.get(pk=bulletinId).public == False:
+            call(["touch", "outfile"]) 
+            prevURL = doc.file.url
+            unencrypted = open(doc.file.url, 'r+')
+            encryption.encrypt(unencrypted, open('outfile', 'r+'), generatePassword())
+            call(["rm", "-rf", prevURL])
+            call(["mv", "outfile", prevURL])
+        return showUserHome(userId, request)
+    except:
+        return render(request, 'file_error.html', {'user_name': userId})
 
 @require_http_methods(["POST"])
 def addPic(request,userId):
-    file =request.FILES['pic']
-    pic = models.ProfilePic(file = file, user = userId)
-    pic.save()
-    return HttpResponseRedirect('/'+userId+'/')
+    try:
+        file =request.FILES['pic']
+        pic = models.ProfilePic(file = file, user = userId)
+        pic.save()
+        return HttpResponseRedirect('/'+userId+'/')
+    except:
+        return render(request, 'file_error.html', {'user_name':userId})
 
 @require_http_methods(["POST"])
 def getDocument(request, userId, bulletinId, fileName):
@@ -308,9 +312,9 @@ def showUserFolder(userId, folderId, request):
 
 def showSearchResults(userId, query, request):
     results = models.Bulletin.objects.raw("SELECT DISTINCT * FROM SecureWitness_Bulletin " +
-                                            "WHERE (author = %s AND (name LIKE %s OR description LIKE %s OR location LIKE %s)) " +
-                                            "OR (public = 1 AND (name LIKE %s OR description LIKE %s OR location LIKE %s))", [userId, '%'+query+'%', '%'+query+'%', '%'+query+'%', '%'+query+'%', '%'+query+'%', '%'+query+'%'])
-    return render(request, 'search_results.html', {'results': results, 'query': query, 'userId': userId})
+                                            "WHERE (name LIKE %s OR description LIKE %s OR location LIKE %s) ", ['%'+query+'%', '%'+query+'%', '%'+query+'%'])
+    docs = models.Document.objects.values();
+    return render(request, 'search_results.html', {'results': results, 'documents':docs, 'query': query, 'userId': userId})
 
 def showEdit(userId, bulletinId, request):
     bulletinForm = BulletinForm()

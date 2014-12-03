@@ -25,9 +25,9 @@
         </div><!-- /.container-fluid -->
     </nav>
     <div class="alert alert-danger" role="alert" style="height:400px">
-		<h4> You are not allowed to access this page.</h4>
+		<h4> Please choose a file.</h4>
 		<p> Click <a  href="{%url 'homePage' %}"> Here </a> to return to the homepage.</p>
-<p> Click <a  href="{{userId}}"> Here </a> to return to your user homepage.</p>
+<p> Click <a  href="{%url 'homePage'%}{{userId}}"> Here </a> to return to your user homepage.</p>
 	</div>
 	<hr>
 	<footer>
@@ -36,4 +36,3 @@
 </body>
 {% endblock %}
 </html>
-

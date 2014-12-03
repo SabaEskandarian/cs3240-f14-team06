@@ -21,6 +21,7 @@
 
 	<h2>{{user_name}} is already logged in.</h2>
 	<p> Click <a href="/"> Here </a> to return to the homepage.</p>
+<p> Click <a  href="/{{user_name}}"> Here </a> to return to your user homepage.</p>
     <form action="/accounts/logout/" method="post">  {% csrf_token %}
      	<input type ="submit"class="btn btn-info"  value ="Log Out"></form>
     </div>
