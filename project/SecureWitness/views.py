@@ -182,6 +182,7 @@ def addDocument(request, userId, bulletinId):
     file = request.FILES['doc']
     doc = models.Document(file = file, bulletin_id = bulletinId, user=userId)
     doc.save()
+    key=""
     if models.Bulletin.objects.get(pk=bulletinId).public == False:
         call(["touch", "outfile"]) 
         prevURL = doc.file.url
@@ -189,8 +190,9 @@ def addDocument(request, userId, bulletinId):
         encryption.encrypt(unencrypted, open("outfile", 'r+'), str(userId) + str(bulletinId) + str(doc.file.url))
         call(["rm", "-rf", prevURL])
         call(["mv", "outfile", prevURL])
+        
     #return HttpResponseRedirect('/'+userId+'/')
-    return showUserHome(userId, request)
+    return showUserHome(userId, request, key)
 
 @require_http_methods(["POST"])
 def addPic(request,userId):
@@ -267,7 +269,7 @@ def searchRequest(request, userId):
 #the things below are not views... maybe move them out later?
 
 #return the interface page of the user
-def showUserHome(userId, request):
+def showUserHome(userId, request, key = ""):
     if request.user.username != userId:
         return render(request, 'not_allowed.html', {'userId': request.user.username})
     bulletinForm = BulletinForm()
@@ -280,7 +282,7 @@ def showUserHome(userId, request):
     else:
         profPic = profPic[0]
     #return render_to_response('user_home.html', {'bulletinForm': bulletinForm, 'bulletins':bulletins}, )
-    return render(request, 'user_home.html', {'userId':userId, 'bulletinForm': bulletinForm, 'bulletins':bulletins, 'folders':folders, 'documents':docs, 'pic': profPic})
+    return render(request, 'user_home.html', {'userId':userId, 'bulletinForm': bulletinForm, 'bulletins':bulletins, 'folders':folders, 'documents':docs, 'pic': profPic, 'key':key})
 
 def showUserFolder(userId, folderId, request):
     bulletins = models.Bulletin.objects.filter(author = userId, folder_id = folderId).values()

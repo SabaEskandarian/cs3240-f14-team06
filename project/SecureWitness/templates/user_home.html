@@ -9,6 +9,9 @@
 </head>
 {% block content %}
 <body>
+{%if {{key}} !="" %}
+    alert({{key}})
+{% endif %}
 <div class="header">
   <nav class="navbar navbar-default navbar-static-top" role="navigation">
         <div class="container-fluid">
