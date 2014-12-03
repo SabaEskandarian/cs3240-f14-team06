@@ -228,9 +228,9 @@ def getDocument(request, userId, bulletinId, fileName):
 
 @require_http_methods(["GET"])
 def getProfile(request, userId, fileName):
-    response = HttpResponse(FileWrapper(open('documents/'+userId+'/'+fileName)), content_type='application/force-download')
-    response['Content-Disposition'] = 'attachment; filename='+fileName
-    response['X-Sendfile'] = 'documents/'+userId+'/'+fileName
+    response = HttpResponse(FileWrapper(open('documents/'+userId+'/'+fileName)),content_type='image')
+  #  response['Content-Disposition'] = 'attachment; filename='+fileName
+  #  response['X-Sendfile'] = 'documents/'+userId+'/'+fileName
     return response
 
 def deleteDocument(request, userId, bulletinId, fileName):
@@ -283,7 +283,11 @@ def showUserHome(userId, request):
     bulletins = models.Bulletin.objects.filter(author = userId, folder_id = 0).values()
     folders = models.Folder.objects.filter(user = userId).values()
     docs = models.Document.objects.filter(user = userId).values()
-    profPic = models.ProfilePic.objects.get(user = userId)
+    profPic = models.ProfilePic.objects.filter(user = userId)
+    if(len(profPic) == 0):
+        profPic = models.ProfilePic(user="", file="");
+    else:
+        profPic = profPic[0]
     #return render_to_response('user_home.html', {'bulletinForm': bulletinForm, 'bulletins':bulletins}, )
     return render(request, 'user_home.html', {'userId':userId, 'bulletinForm': bulletinForm, 'bulletins':bulletins, 'folders':folders, 'documents':docs, 'pic': profPic})
 
