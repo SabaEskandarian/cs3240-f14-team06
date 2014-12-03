@@ -168,7 +168,11 @@
                     <ul>
                         {% for doc in documents %}
                             {% if doc.bulletin_id == bulletin.id %}
-                                <li><a href="/{{ doc.file }}">{{ doc.file }}</a> <form action="/deleteDocument/{{ doc.file }}" method="GET"><input type="submit"  class="btn btn-default"  value="Delete" /></form></li>
+                                <li>
+					{{ doc.file }}: 
+					<form action="/{{ doc.file }}" method="POST">{% csrf_token %}key(if needed):<input type="text" name="key" id="id_key" mexlength="130"><input type="submit" class="btn btn-default" value="Retrieve"> </form>
+					<form action="/deleteDocument/{{ doc.file }}" method="GET"><input type="submit"  class="btn btn-default"  value="Delete" /></form>
+				</li>
                             {% endif %}
                         {% endfor %}
                     </ul>

@@ -199,7 +199,7 @@ def addPic(request,userId):
     pic.save()
     return HttpResponseRedirect('/'+userId+'/')
 
-@require_http_methods(["GET"])
+@require_http_methods(["POST"])
 def getDocument(request, userId, bulletinId, fileName):
     if models.Bulletin.objects.get(pk=bulletinId).public == False:
         call(["touch", "outfile"])
