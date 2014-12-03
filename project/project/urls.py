@@ -13,7 +13,7 @@ urlpatterns = patterns('',
     
     url(r'^loginUser/?$', 'SecureWitness.views.loginUser'),
     url(r'^createUser/?$', 'SecureWitness.views.createUser'),
-    url(r'^(?P<userId>[^/]+)/?$', 'SecureWitness.views.userPage'),
+    url(r'^(?P<userId>[^/]+)/?$', 'SecureWitness.views.userPage', name='userPage'),
     url(r'^user/(?P<userId>[^/]+)/?$', 'SecureWitness.views.userPage'),
     url(r'^(?P<userId>[^/]+)/disableUser/?$', 'SecureWitness.views.disableUser'),
 
