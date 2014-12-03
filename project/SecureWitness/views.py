@@ -62,8 +62,10 @@ def createFolder(request, userId):
     data = request.POST
     folder = models.Folder(name=data['name'], user=userId)
     folder.save()
-    return HttpResponseRedirect('/'+userId+'/')
+    #return HttpResponseRedirect('/'+userId+'/')
     #return showUserHome(userId, request)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
 
 #@require_http_methods(["DELETE"])
 def deleteFolder(request, userId, folderId):
@@ -72,17 +74,17 @@ def deleteFolder(request, userId, folderId):
     for bulletin in bulletins:
         bulletin.delete()
     folder.delete()
-    return HttpResponseRedirect('/'+userId+'/')
+    #return HttpResponseRedirect('/'+userId+'/')
     #return showUserHome(userId, request)
-
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 @require_http_methods(["POST"])
 def renameFolder(request, userId, folderId):
     folder = models.Folder.objects.get(pk=folderId)
     folder.name = request.POST['name']
     folder.save()
-    return HttpResponseRedirect('/'+userId+'/')
+    #return HttpResponseRedirect('/'+userId+'/')
     #return showUserHome(userId, request)
-
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 @require_http_methods(["POST"])
 def copyFolder(request, userId, folderId):
     folder = models.Folder.objects.get(pk=folderId)
@@ -94,9 +96,9 @@ def copyFolder(request, userId, folderId):
         bulletin.pk = None
         bulletin.folder = folder
         bulletin.save()
-    return HttpResponseRedirect('/'+userId+'/')
+    #return HttpResponseRedirect('/'+userId+'/')
     #return showUserHome(userId, request)
-
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 #bulletins
 @login_required(login_url='/index')
 @require_http_methods(["POST"])
@@ -110,8 +112,10 @@ def createBulletin(request, userId):
         public = True
     bulletin = models.Bulletin(name=data['name'], date=data['date'], location = data['location'], description = data['description'], public = public, folder_id = folder_id, author=userId)
     bulletin.save()
-    return HttpResponseRedirect('/'+userId+'/')
+    #return HttpResponseRedirect('/'+userId+'/')
     #return showUserHome(userId, request)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
 
 #@require_http_methods(["DELETE"]) this was causing problems
 def deleteBulletin(request, userId, bulletinId):
@@ -121,16 +125,17 @@ def deleteBulletin(request, userId, bulletinId):
         document.file.delete()
         document.delete()
     bulletin.delete()
-    return HttpResponseRedirect('/'+userId+'/')
-
+    #return HttpResponseRedirect('/'+userId+'/')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 @require_http_methods(["POST"])
 def renameBulletin(request, userId, bulletinId):
     bulletin = models.Bulletin.objects.get(pk=bulletinId)
     bulletin.name = request.POST['name']
     bulletin.save()
-    return HttpResponseRedirect('/'+userId+'/')
+    #return HttpResponseRedirect('/'+userId+'/')
     #return showUserHome(userId, request)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 @require_http_methods(["POST"])
 def editBulletin(request, userId, bulletinId):
@@ -148,8 +153,9 @@ def editBulletin(request, userId, bulletinId):
     if(data["name"] and data["name"] != ""):
         bulletin.name = data["name"]
     bulletin.save()
-    return HttpResponseRedirect('/'+userId+'/')
+    #return HttpResponseRedirect('/'+userId+'/')
     #return showUserHome(userId, request)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 @require_http_methods(["POST"])
 def setBulletinFolder(request, userId, bulletinId):
@@ -157,8 +163,10 @@ def setBulletinFolder(request, userId, bulletinId):
     bulletin = models.Bulletin.objects.get(pk=bulletinId)
     bulletin.folder_id=folder_id
     bulletin.save()
-    return HttpResponseRedirect('/'+userId+'/')
+    #return HttpResponseRedirect('/'+userId+'/')
     #return showUserHome(userId, request)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
 
 @require_http_methods(["POST"])
 def copyBulletin(request, userId, bulletinId):
@@ -166,16 +174,17 @@ def copyBulletin(request, userId, bulletinId):
     bulletin.pk=None
     bulletin.name = request.POST['name']
     bulletin.save()
-    return HttpResponseRedirect('/'+userId+'/')
+    #return HttpResponseRedirect('/'+userId+'/')
     #return showUserHome(userId, request)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 @require_http_methods(["GET"])
 def getBulletins(request, userId):
     bulletins = models.Bulletin.objects.filter(author = userId).values()
     #return render_to_response('list_bulletins.html', {'bulletins':bulletins})
-    return HttpResponseRedirect('/'+userId+'/')
+    #return HttpResponseRedirect('/'+userId+'/')
     #return showUserHome(userId, request)
-
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 #documents
 @require_http_methods(["POST"])
 def addDocument(request, userId, bulletinId):
@@ -230,9 +239,9 @@ def deleteDocument(request, userId, bulletinId, fileName):
     document = models.Document.objects.get(user = userId, bulletin_id = bulletinId, file = 'documents/'+userId+'/'+bulletinId+'/'+fileName)
     document.file.delete()
     document.delete()
-    return HttpResponseRedirect('/'+userId+'/')
+    #return HttpResponseRedirect('/'+userId+'/')
     #return showUserHome(userId, request)
-
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 #sharing
 @require_http_methods(["POST"])
 def createSharing(request):
