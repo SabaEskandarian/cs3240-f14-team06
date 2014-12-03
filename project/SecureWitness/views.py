@@ -13,6 +13,7 @@ from django.contrib.auth.decorators import login_required
 from subprocess import call
 import encryption
 import random
+import string
 
 #user
 @require_http_methods(["POST"])
@@ -179,8 +180,9 @@ def getBulletins(request, userId):
 
 def generatePassword():
     password = ''
-    for i in range(128):
+    for i in range(32):
         password += random.SystemRandom().choice(string.ascii_uppercase + string.ascii_lowercase + string.digits)
+    print password
     return password
 
 #documents
@@ -210,15 +212,21 @@ def addPic(request,userId):
 @require_http_methods(["POST"])
 def getDocument(request, userId, bulletinId, fileName):
     key = request.POST['key']
+    key = key.encode('ascii')
+
+    pass
     if models.Bulletin.objects.get(pk=bulletinId).public == False:
         call(["touch", "outfile"])
         out = open('outfile', 'r+')
         encrypted = open('documents/'+userId+'/'+bulletinId+'/'+fileName, 'r+')
-        encryption.decrypt(encrypted, out, key)
-        out.close()
-        response = HttpResponse(FileWrapper(open('outfile', 'r+')), content_type='application/force-download')
-        response['Content-Disposition'] = 'attachment; filename='+fileName
-        response['X-Sendfile'] = 'documents/'+userId+'/'+bulletinId+'/'+fileName
+        try:
+            encryption.decrypt(encrypted, out, key)
+            out.close()
+            response = HttpResponse(FileWrapper(open('outfile', 'r+')), content_type='application/force-download')
+            response['Content-Disposition'] = 'attachment; filename='+fileName
+            response['X-Sendfile'] = 'documents/'+userId+'/'+bulletinId+'/'+fileName
+        except ValueError:
+            response = HttpResponseRedirect('/'+userId+'/')
         call(['rm', '-rf', 'outfile'])
     else:
         response = HttpResponse(FileWrapper(open('documents/'+userId+'/'+bulletinId+'/'+fileName)), content_type='application/force-download')
