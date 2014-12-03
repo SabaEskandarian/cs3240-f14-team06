@@ -14,4 +14,4 @@ class BulletinAdmin(admin.ModelAdmin):
 admin.site.register(Folder, FolderAdmin)
 admin.site.register(Bulletin,BulletinAdmin)
 admin.site.register(Document)
-admin.site.register(Sharing)
+# admin.site.register(Sharing)

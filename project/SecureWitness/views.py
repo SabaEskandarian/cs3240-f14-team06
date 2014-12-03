@@ -194,7 +194,7 @@ def generatePassword():
     password = ''
     for i in range(32):
         password += random.SystemRandom().choice(string.ascii_uppercase + string.ascii_lowercase + string.digits)
-    print password
+    print "Password: ", password
     return password
 
 #documents

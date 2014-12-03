@@ -29,6 +29,8 @@ class Document(models.Model):
     file = models.FileField(upload_to=place_document)
     bulletin = models.ForeignKey(Bulletin, on_delete=models.DO_NOTHING)
     user = models.CharField(max_length=100)
+    def __str__(self):
+        return  self.file.url
 
 class Sharing(models.Model):
     author = models.CharField(max_length=100)
