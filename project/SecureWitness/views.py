@@ -12,6 +12,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from subprocess import call
 import encryption
+import random
 
 #user
 @require_http_methods(["POST"])
@@ -176,6 +177,12 @@ def getBulletins(request, userId):
     return HttpResponseRedirect('/'+userId+'/')
     #return showUserHome(userId, request)
 
+def generatePassword():
+    password = ''
+    for i in range(128):
+        password += random.SystemRandom().choice(string.ascii_uppercase + string.ascii_lowercase + string.digits)
+    return password
+
 #documents
 @require_http_methods(["POST"])
 def addDocument(request, userId, bulletinId):
@@ -186,7 +193,8 @@ def addDocument(request, userId, bulletinId):
         call(["touch", "outfile"]) 
         prevURL = doc.file.url
         unencrypted = open(doc.file.url, 'r+')
-        encryption.encrypt(unencrypted, open("outfile", 'r+'), str(userId) + str(bulletinId) + str(doc.file.url))
+        #encryption.encrypt(unencrypted, open("outfile", 'r+'), str(userId) + str(bulletinId) + str(doc.file.url))
+        encryption.encrypt(unencrypted, open('outfile', 'r+'), generatePassword())
         call(["rm", "-rf", prevURL])
         call(["mv", "outfile", prevURL])
     #return HttpResponseRedirect('/'+userId+'/')
@@ -199,13 +207,14 @@ def addPic(request,userId):
     pic.save()
     return HttpResponseRedirect('/'+userId+'/')
 
-@require_http_methods(["GET"])
+@require_http_methods(["POST"])
 def getDocument(request, userId, bulletinId, fileName):
+    key = request.POST['key']
     if models.Bulletin.objects.get(pk=bulletinId).public == False:
         call(["touch", "outfile"])
         out = open('outfile', 'r+')
         encrypted = open('documents/'+userId+'/'+bulletinId+'/'+fileName, 'r+')
-        encryption.decrypt(encrypted, out, str(userId) + str(bulletinId) + str('documents/'+userId+'/'+bulletinId+'/'+fileName))
+        encryption.decrypt(encrypted, out, key)
         out.close()
         response = HttpResponse(FileWrapper(open('outfile', 'r+')), content_type='application/force-download')
         response['Content-Disposition'] = 'attachment; filename='+fileName
