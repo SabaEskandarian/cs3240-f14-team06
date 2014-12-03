@@ -10,7 +10,7 @@
 {% block content %}
 <body>
 {%if key != "" %}
-    alert({{key}})
+    <script>alert("The key for the uploaded document is: {{key}}")</script>
 {% endif %}
 <div class="header">
   <nav class="navbar navbar-default navbar-static-top" role="navigation">
