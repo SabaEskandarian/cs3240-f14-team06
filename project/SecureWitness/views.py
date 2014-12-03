@@ -12,6 +12,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from subprocess import call
 import encryption
+import random
+import string
 
 #user
 @require_http_methods(["POST"])
@@ -186,41 +188,64 @@ def getBulletins(request, userId):
     #return showUserHome(userId, request)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 #documents
+
+
+def generatePassword():
+    password = ''
+    for i in range(32):
+        password += random.SystemRandom().choice(string.ascii_uppercase + string.ascii_lowercase + string.digits)
+    print password
+    return password
+
+#documents
 @require_http_methods(["POST"])
 def addDocument(request, userId, bulletinId):
-    file = request.FILES['doc']
-    doc = models.Document(file = file, bulletin_id = bulletinId, user=userId)
-    doc.save()
-    key=""
-    if models.Bulletin.objects.get(pk=bulletinId).public == False:
-        call(["touch", "outfile"]) 
-        prevURL = doc.file.url
-        unencrypted = open(doc.file.url, 'r+')
-        encryption.encrypt(unencrypted, open("outfile", 'r+'), str(userId) + str(bulletinId) + str(doc.file.url))
-        call(["rm", "-rf", prevURL])
-        call(["mv", "outfile", prevURL])
-        
-    #return HttpResponseRedirect('/'+userId+'/')
-    return showUserHome(userId, request, key)
+    try:
+        file = request.FILES['doc']
+        doc = models.Document(file = file, bulletin_id = bulletinId, user=userId)
+        doc.save()
+        key = ""
+        if models.Bulletin.objects.get(pk=bulletinId).public == False:
+            call(["touch", "outfile"]) 
+            prevURL = doc.file.url
+            unencrypted = open(doc.file.url, 'r+')
+            key = generatePassword()
+            encryption.encrypt(unencrypted, open('outfile', 'r+'),key)
+            call(["rm", "-rf", prevURL])
+            call(["mv", "outfile", prevURL])
+        return showUserHome(userId, request,key)
+    except:
+        return render(request, 'file_error.html', {'user_name': userId})
+
 
 @require_http_methods(["POST"])
 def addPic(request,userId):
-    file =request.FILES['pic']
-    pic = models.ProfilePic(file = file, user = userId)
-    pic.save()
-    return HttpResponseRedirect('/'+userId+'/')
+    try:
+        file =request.FILES['pic']
+        pic = models.ProfilePic(file = file, user = userId)
+        pic.save()
+        return HttpResponseRedirect('/'+userId+'/')
+    except:
+        return render(request, 'file_error.html', {'user_name':userId})
 
 @require_http_methods(["POST"])
 def getDocument(request, userId, bulletinId, fileName):
+    key = request.POST['key']
+    key = key.encode('ascii')
+
+    pass
     if models.Bulletin.objects.get(pk=bulletinId).public == False:
         call(["touch", "outfile"])
         out = open('outfile', 'r+')
         encrypted = open('documents/'+userId+'/'+bulletinId+'/'+fileName, 'r+')
-        encryption.decrypt(encrypted, out, str(userId) + str(bulletinId) + str('documents/'+userId+'/'+bulletinId+'/'+fileName))
-        out.close()
-        response = HttpResponse(FileWrapper(open('outfile', 'r+')), content_type='application/force-download')
-        response['Content-Disposition'] = 'attachment; filename='+fileName
-        response['X-Sendfile'] = 'documents/'+userId+'/'+bulletinId+'/'+fileName
+        try:
+            encryption.decrypt(encrypted, out, key)
+            out.close()
+            response = HttpResponse(FileWrapper(open('outfile', 'r+')), content_type='application/force-download')
+            response['Content-Disposition'] = 'attachment; filename='+fileName
+            response['X-Sendfile'] = 'documents/'+userId+'/'+bulletinId+'/'+fileName
+        except ValueError:
+            response = HttpResponseRedirect('/'+userId+'/')
         call(['rm', '-rf', 'outfile'])
     else:
         response = HttpResponse(FileWrapper(open('documents/'+userId+'/'+bulletinId+'/'+fileName)), content_type='application/force-download')
@@ -302,9 +327,9 @@ def showUserFolder(userId, folderId, request):
 
 def showSearchResults(userId, query, request):
     results = models.Bulletin.objects.raw("SELECT DISTINCT * FROM SecureWitness_Bulletin " +
-                                            "WHERE (author = %s AND (name LIKE %s OR description LIKE %s OR location LIKE %s)) " +
-                                            "OR (public = 1 AND (name LIKE %s OR description LIKE %s OR location LIKE %s))", [userId, '%'+query+'%', '%'+query+'%', '%'+query+'%', '%'+query+'%', '%'+query+'%', '%'+query+'%'])
-    return render(request, 'search_results.html', {'results': results, 'query': query, 'userId': userId})
+                                            "WHERE (name LIKE %s OR description LIKE %s OR location LIKE %s) ", ['%'+query+'%', '%'+query+'%', '%'+query+'%'])
+    docs = models.Document.objects.values();
+    return render(request, 'search_results.html', {'results': results, 'documents':docs, 'query': query, 'userId': userId})
 
 def showEdit(userId, bulletinId, request):
     bulletinForm = BulletinForm()
