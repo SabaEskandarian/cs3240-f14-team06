@@ -63,15 +63,15 @@
 <div class="jumbotron center">
     <div >
     <h1>{{userId}}, Welcome!</h1>
-  <!--  <form action="/{{ userId }}/addProfile/" method="post" enctype="multipart/form-data">
+    <form action="/{{ userId }}/addProfile/" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <input type="file" name="pic"/>
         <input type="submit" class="btn btn-default"value="Upload Profile Pic">
-    </form>-->
+    </form>
     </div>
-   <!-- <div>
-        <img src="/{{ pic.file.url }}" alt="Upload a Profile Picture">
-    </div> -->
+   <div>
+        <img src="/{{ pic.file }}" alt="Upload a Profile Picture" style="height: 200px; width: 200px">
+    </div> 
  </div>
 
 
