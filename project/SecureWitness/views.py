@@ -291,9 +291,9 @@ def showUserFolder(userId, folderId, request):
 
 def showSearchResults(userId, query, request):
     results = models.Bulletin.objects.raw("SELECT DISTINCT * FROM SecureWitness_Bulletin " +
-                                            "WHERE (author = %s AND (name LIKE %s OR description LIKE %s OR location LIKE %s)) " +
-                                            "OR (public = 1 AND (name LIKE %s OR description LIKE %s OR location LIKE %s))", [userId, '%'+query+'%', '%'+query+'%', '%'+query+'%', '%'+query+'%', '%'+query+'%', '%'+query+'%'])
-    return render(request, 'search_results.html', {'results': results, 'query': query, 'userId': userId})
+                                            "WHERE (name LIKE %s OR description LIKE %s OR location LIKE %s) ", ['%'+query+'%', '%'+query+'%', '%'+query+'%'])
+    docs = models.Document.objects.values();
+    return render(request, 'search_results.html', {'results': results, 'documents':docs, 'query': query, 'userId': userId})
 
 def showEdit(userId, bulletinId, request):
     bulletinForm = BulletinForm()
